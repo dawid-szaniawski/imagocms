@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo_512.webp') }}">
+    <title>{% block title %} {% endblock %} | ImagoCMS</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+<style>
+html {
+  background-color: #181818;
+}
+body {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+.bottom-link{
+  margin-top: 26px;
+}
+.link-box {
+  display: grid;
+  text-align: center;
+}
+a.form-link {
+    text-decoration: none;
+    color: #aaa;
+    margin: 2px;
+}
+a.form-link:hover {
+  transition: .5s;
+  color: #fff;
+}
+a.small {
+ font-size: 1.2rem;
+}
+      </style>
+  </head>
+  <body>
+<div class="error-messages">
+  {% for message in get_flashed_messages() %}
+  <div class="close-btn" onclick=delete_flash(this)>x</div>
+  <div class="flash show">{{ message }}</div>
+  {% endfor %}
+</div>
+    <div class="content-wrapper">
+      <main class="main">{% block content %} {% endblock %}</main>
+    </div>
+    <footer class="footer">
+        {% include 'footer.html' %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script>
+            function delete_flash(flash){
+                $(flash).parent().remove()
+            }
+        </script>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'auth/auth_base.html' %}
+{% block title %}Logowanie{% endblock %}
+
+{% block content %}
+  <form method="post" class="form">
+      <div class="logo">
+    <img src="{{ url_for('static', filename='logotype_426x128.webp') }}" width="380" height="114"></div>
+      <h1 class="title">Logowanie</h1>
+     <div class="input-container ic1">
+        <input id="username" name="username" class="input" type="text" placeholder=" " required/>
+        <div class="cut"></div>
+        <label for="username" class="placeholder">Login</label>
+      </div>
+      <div class="input-container ic2">
+        <input id="password" name="password" class="input" type="text" placeholder=" " required/>
+        <div class="cut"></div>
+        <label for="password" class="placeholder">Hasło</label>
+      </div>
+    <input type="submit" value="Zaloguj" class="submit">
+      <div class="bottom-link">
+          <div class="link-box">
+          <a href="{{ url_for('auth.register') }}" class="form-link">Zarejestruj się</a>
+          <a href="{{ url_for('homepage.index') }}" class="form-link small">Powróć do strony głównej ←</a>
+      </div></div>
+  </form>
+{% endblock %}

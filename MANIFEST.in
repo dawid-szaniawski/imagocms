@@ -1,0 +1,4 @@
+include imagocms/schema.sql
+graft imagocms/static
+graft imagocms/templates
+global-exclude *.pyc

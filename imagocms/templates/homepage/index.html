@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Strona Główna{% endblock %}
+
+{% block content %}
+{% for meme in memes %}
+<article>
+    <div class="meme">
+        <h2 class="meme-title">{{ meme['title'] }}</h2>
+        <div class="meme-details">
+        <p>
+            <a href="{{ url_for('homepage.index', page=1, author_name=meme['username']) }}" class="username">
+                {{ meme['username'] }}</a>
+            {{ meme['created'].strftime('%Y-%m-%d') }}</p></div>
+        {% if not meme['filename'] %}
+            <img src="{{ meme['img_src'] }}" class="meme-image" alt="{{ meme['title'] }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/'+meme['filename']) }}" class="meme-image" alt="{{ meme['title'] }}">
+        {% endif %}
+
+    </div>
+</article>
+{% endfor %}
+<div class="pagination">
+    {% if next_page is not none %}
+    <div class="pagination-button">
+        <a href="{{ url_for('homepage.index', page=next_page, author_name=author) }}" class="pagination-a">Następna strona</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
