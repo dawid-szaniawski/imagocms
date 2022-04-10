@@ -1,5 +1,6 @@
 import sqlite3
 import click
+import os
 from flask import current_app, g
 from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
@@ -25,6 +26,14 @@ def close_db(e=None):
         db.close()
 
 
+def create_folders():
+    try:
+        os.mkdir(current_app.instance_path)
+        os.mkdir(os.path.join(current_app.static_folder, 'images'))
+    except OSError:
+        pass
+
+
 def init_db():
     db = get_db()
 
@@ -32,15 +41,12 @@ def init_db():
         db.executescript(f.read().decode('utf8'))
 
 
-@click.command('init-db')
+@click.command('prepare-app')
 @with_appcontext
-def init_db_command():
-    """
-    Command line command that calls the init_db function, with is cleaning existing data, creating new tables, then
-    show a success message.
-    """
+def prepare_app_command():
+    create_folders()
     init_db()
-    click.echo('Initialized the database.')
+    click.echo('Done.')
 
 
 def create_superuser(admin_login, admin_password):
@@ -70,5 +76,5 @@ def init_app(app):
     Register close_db, init_db and create_superuser functions.
     """
     app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+    app.cli.add_command(prepare_app_command)
     app.cli.add_command(create_superuser_command)
