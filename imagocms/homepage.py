@@ -1,5 +1,3 @@
-import os.path
-
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, current_app
 
 from imagocms.db import get_db
@@ -22,7 +20,7 @@ def index(page=1, author_name=None):
 
     if not author_name:
         to_execute_command = """
-            SELECT title, img_src, created, username, filename
+            SELECT title, description, img_src, created, username, filename
             FROM memes m JOIN user u ON m.author_id = u.id
             ORDER BY created DESC
             LIMIT 20 OFFSET ?
@@ -30,7 +28,7 @@ def index(page=1, author_name=None):
         to_execute_variables = ((page * 10)-10,)
     else:
         to_execute_command = """
-                    SELECT title, img_src, created, username, filename
+                    SELECT title, description, img_src, created, username, filename
                     FROM memes m JOIN user u ON m.author_id = u.id
                     WHERE username = ?
                     ORDER BY created DESC
@@ -48,11 +46,17 @@ def index(page=1, author_name=None):
     return render_template('homepage/index.html', memes=images_data, page=page, next_page=next_page, author=author_name)
 
 
+@bp.route('/img/<int:img_id>')
+def image(img_id):
+    db = get_db()
+
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
     if request.method == 'POST':
         title = request.form['title']
+        description = request.form['description']
         file = request.files['image']
         error = None
         allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
@@ -68,9 +72,9 @@ def create():
             db = get_db()
             filename = upload_image(current_app.config['UPLOAD_FOLDER'], file)
             db.execute(
-                'INSERT INTO memes (title, author_id, filename)'
-                ' VALUES (?, ?, ?)',
-                (title, g.user['id'], filename)
+                'INSERT INTO memes (title, author_id, description, filename)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, g.user['id'], description, filename)
             )
             db.commit()
             return redirect(url_for('homepage.index'))

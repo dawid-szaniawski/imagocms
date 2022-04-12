@@ -2,7 +2,7 @@
 {% block title %}Dodaj nowy obrazek{% endblock %}
 
 {% block content %}
-<div class="form-body">
+<div class="form-body" xmlns="http://www.w3.org/1999/html">
   <form method="post" enctype=multipart/form-data>
       <h1 class="title">Dodaj nowy obrazek</h1>
      <div class="input-container ic1">
@@ -10,9 +10,15 @@
         <div class="cut"></div>
         <label for="title" class="placeholder">Tytuł obrazka</label>
       </div>
+    <div class="input-container ic2" style="margin-bottom: 85px;">
+        <textarea id="description" name="description" class="input" placeholder=" " style="resize: none;height: 112px;font-size: 1.8rem;"></textarea>
+        <div class="cut cut-short"></div>
+        <label for="description" class="placeholder">Opis (opcjonalnie)</label>
+      </div>
     <div class="input-container ic2">
+
         <label for="image" class="upload-input input">
-            <input type="file" name="image" id="image" style="display: none;">
+            <input type="file" name="image" id="image" style="display: none;" accept=".png, .jpg, .jpeg, .gif">
             Dodaj plik
         </label>
     </div>

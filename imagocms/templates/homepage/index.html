@@ -10,11 +10,16 @@
         <p>
             <a href="{{ url_for('homepage.index', page=1, author_name=meme['username']) }}" class="username">
                 {{ meme['username'] }}</a>
-            {{ meme['created'].strftime('%Y-%m-%d') }}</p></div>
+            {{ meme['created'].strftime('%Y-%m-%d') }}</p>
+            {% if meme['description'] %}
+                <p class="description">{{ meme['description'] }}</p>
+            {% endif %}
+        </div>
         {% if not meme['filename'] %}
             <img src="{{ meme['img_src'] }}" class="meme-image" alt="{{ meme['title'] }}">
         {% else %}
-            <img src="{{ url_for('static', filename='images/'+meme['filename']) }}" class="meme-image" alt="{{ meme['title'] }}">
+            <img src="{{ url_for('static', filename='images/'+meme['filename']) }}" class="meme-image"
+                 alt="{% if meme['description'] %}{{ meme['description'] }}{% else %}{{ meme['title'] }}{% endif %}">
         {% endif %}
 
     </div>

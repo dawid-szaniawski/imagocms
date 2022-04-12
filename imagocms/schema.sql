@@ -16,6 +16,7 @@ CREATE TABLE memes (
     author_id INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     title TEXT,
+    description TEXT,
     filename TEXT UNIQUE,
     img_src TEXT UNIQUE,
     accepted BOOLEAN CHECK (accepted IN (0, 1)),
@@ -28,6 +29,7 @@ CREATE TABLE commentary (
     author_id INTEGER NOT NULL,
     memes_id INTEGER NOT NULL,
     body TEXT NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES user (id) ON DELETE CASCADE,
     FOREIGN KEY (memes_id) REFERENCES memes (id) ON DELETE CASCADE
 );
