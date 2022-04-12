@@ -24,7 +24,7 @@ CREATE TABLE memes (
     CHECK (filename is not null or img_src is not null)
 );
 
-CREATE TABLE commentary (
+CREATE TABLE comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
     memes_id INTEGER NOT NULL,

@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, current_app
+from werkzeug.exceptions import abort
 
 from imagocms.db import get_db
 from imagocms.auth import login_required
@@ -18,25 +19,26 @@ def index(page=1, author_name=None):
 
     db = get_db()
 
-    if not author_name:
+    if author_name:
         to_execute_command = """
-            SELECT title, description, img_src, created, username, filename
-            FROM memes m JOIN user u ON m.author_id = u.id
-            ORDER BY created DESC
-            LIMIT 20 OFFSET ?
-            """
-        to_execute_variables = ((page * 10)-10,)
+        SELECT m.id, m.title, m.description, m.img_src, m.filename, m.created, u.username
+        FROM memes m LEFT JOIN user u ON m.author_id = u.id
+        WHERE u.username = ?
+        ORDER BY created DESC
+        LIMIT 20 OFFSET ?"""
+        to_execute_variables = (author_name, (page * 10) - 10,)
     else:
         to_execute_command = """
-                    SELECT title, description, img_src, created, username, filename
-                    FROM memes m JOIN user u ON m.author_id = u.id
-                    WHERE username = ?
-                    ORDER BY created DESC
-                    LIMIT 20 OFFSET ?
-                    """
-        to_execute_variables = (author_name, (page * 10) - 10,)
+        SELECT m.id, m.title, m.description, m.img_src, m.filename, m.created, u.username
+        FROM memes m LEFT JOIN user u ON m.author_id = u.id
+        ORDER BY created DESC
+        LIMIT 20 OFFSET ?"""
+        to_execute_variables = ((page * 10) - 10,)
 
     images_data, next_page_data = split_list(db.execute(to_execute_command, to_execute_variables).fetchall())
+
+    if not images_data and page != 1:
+        abort(404)
 
     if not next_page_data:
         next_page = None
@@ -46,9 +48,50 @@ def index(page=1, author_name=None):
     return render_template('homepage/index.html', memes=images_data, page=page, next_page=next_page, author=author_name)
 
 
-@bp.route('/img/<int:img_id>')
-def image(img_id):
-    db = get_db()
+@bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
+def image_page(img_id):
+    def get_image(image_id):
+        image = get_db().execute("""
+        SELECT m.title, m.description, m.img_src, m.filename, m.created, u.username
+        FROM memes m LEFT JOIN user u ON m.author_id = u.id
+        WHERE m.id = ?""", (image_id,)).fetchone()
+
+        if image is None:
+            abort(404)
+
+        return image
+
+    def get_comments(image_id):
+        comments = get_db().execute("""
+        SELECT c.body, c.created, memes_id, u.username
+        FROM comments c LEFT JOIN user u ON c.author_id = u.id
+        WHERE memes_id = ?
+        ORDER BY created DESC""", (image_id,)).fetchall()
+
+        if comments is None:
+            return []
+
+        return comments
+
+    if request.method == 'POST':
+        body = request.form['comment']
+        error = None
+
+        if not body:
+            error = 'Treść komentarza nie może być pusta'
+
+        if error is None:
+            db = get_db()
+            db.execute(
+                'INSERT INTO comments (author_id, memes_id, body)'
+                'VALUES (?, ?, ?)',
+                (g.user['id'], img_id, body)
+            )
+            db.commit()
+            return redirect(request.url)
+        flash(error)
+
+    return render_template('homepage/image_page.html', meme=get_image(img_id), comments=get_comments(img_id))
 
 
 @bp.route('/create', methods=('GET', 'POST'))

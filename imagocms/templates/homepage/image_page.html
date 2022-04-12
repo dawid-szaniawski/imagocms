@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Strona Główna{% endblock %}
+{% block title %}{{ meme['title'] }}{% endblock %}
 
 {% block content %}
-{% for meme in memes %}
 <article>
     <div class="meme">
-        <h2 class="meme-title">
-            <a href="{{ url_for('homepage.image_page', img_id=meme['id']) }}" >{{ meme['title'] }}</a></h2>
+        <h2 class="meme-title">{{ meme['title'] }}</h2>
         <div class="meme-details">
         <p>
             <a href="{{ url_for('homepage.index', page=1, author_name=meme['username']) }}" class="username">
@@ -16,23 +14,29 @@
                 <p class="description">{{ meme['description'] }}</p>
             {% endif %}
         </div>
-        <a href="{{ url_for('homepage.image_page', img_id=meme['id']) }}" >
+
         {% if meme['filename'] %}
             <img src="{{ url_for('static', filename='images/'+meme['filename']) }}" class="meme-image" name="{{ meme['title'] }}"
                  alt="{% if meme['description'] %}{{ meme['description'] }}{% else %}{{ meme['title'] }}{% endif %}">
         {% else %}
             <img src="{{ meme['img_src'] }}" class="meme-image" alt="{{ meme['title'] }}" name="{{ meme['title'] }}">
         {% endif %}
-        </a>
-
     </div>
 </article>
-{% endfor %}
-<div class="pagination">
-    {% if next_page %}
-    <div class="pagination-button">
-        <a href="{{ url_for('homepage.index', page=next_page, author_name=author) }}" class="pagination-a">Następna strona</a>
+<section class="comments">
+    <div class="add-comment">
+        <form method="post">
+            <input id="comment" name="comment" class="input" type="text" placeholder=" " required/>
+            <input type="submit" value="Zapisz" class="submit">
+        </form>
     </div>
-    {% endif %}
-</div>
+
+    {% for comment in comments %}
+    <div class="comment">
+        <p class="login">{{ comment['username'] }}</p>
+        <p class="data">{{ comment['created'] }}</p>
+        <p class="body">{{ comment['body'] }}</p>
+    </div>
+    {% endfor %}
+</section>
 {% endblock %}

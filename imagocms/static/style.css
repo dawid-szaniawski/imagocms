@@ -18,10 +18,11 @@ img {
   width: 100%;
   height: auto;
 }
-h2 {
+h2, h2 a {
  color: #fff;
  font-size: 2.6rem;
  font-weight: 450;
+ text-decoration: none;
 }
 header{
   height: 100%;
@@ -49,9 +50,6 @@ article{
 .content-wrapper{
   max-width: 1600px;
   margin: auto;
-}
-.meme-title {
-color: #fff;
 }
 .meme{
  background-color: #1f1f1f;
