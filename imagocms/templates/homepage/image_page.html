@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ image['title'] }}{% endblock %}
+
+{% block content %}
+<article>
+    <div class="image">
+        <h2 class="image-title">{{ image['title'] }}</h2>
+        <div class="image-details">
+        <p>
+            <a href="{{ url_for('homepage.index', page=1, author_name=image['username']) }}" class="username">
+                {{ image['username'] }}</a>
+            {{ image['created'].strftime('%Y-%m-%d') }}</p>
+            {% if image['description'] %}
+                <p class="description">{{ image['description'] }}</p>
+            {% endif %}
+        </div>
+
+        {% if image['filename'] %}
+            <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
+                 alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+        {% else %}
+            <img src="{{ image['img_src'] }}" class="image-image" alt="{{ image['title'] }}" name="{{ image['title'] }}">
+        {% endif %}
+    </div>
+</article>
+<section class="comments-wrapper">
+    <div class="comments">
+    <div class="add-comment">
+        <form method="post" class="add-comment-form">
+            <div class="comment-input">
+        <textarea id="comment" name="comment" class="input comment-input" placeholder="Wpisz swój komentarz" style="padding: 0px 6px;"></textarea>
+      </div>
+            <button type="submit" class="comment-submit">
+                <img src="{{ url_for('static', filename='diskette_32.png') }}" class="submit-image" width="51" height="51">
+            </button>
+        </form>
+    </div>
+<div class="all-comments">
+    {% for comment in comments %}
+    <div class="comment">
+        <p><a href="{{ url_for('homepage.index', page=1, author_name=comment['username']) }}" class="username">
+                {{ comment['username'] }}</a>
+            <span style="font-size: 1.4rem;">{{ comment['created'].strftime('%Y-%m-%d') }}</span></p>
+        <p class="body">{{ comment['body'] }}</p>
+    </div>
+    {% endfor %}
+</div>
+        </div>
+</section>
+{% endblock %}
