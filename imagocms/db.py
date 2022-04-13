@@ -29,7 +29,6 @@ def close_db(e=None):
 def create_folders():
     try:
         os.mkdir(current_app.instance_path)
-        os.mkdir(os.path.join(current_app.static_folder, 'images'))
     except OSError:
         pass
 

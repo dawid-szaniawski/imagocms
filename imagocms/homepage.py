@@ -21,16 +21,16 @@ def index(page=1, author_name=None):
 
     if author_name:
         to_execute_command = """
-        SELECT m.id, m.title, m.description, m.img_src, m.filename, m.created, u.username
-        FROM memes m LEFT JOIN user u ON m.author_id = u.id
+        SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username
+        FROM images i LEFT JOIN user u ON i.author_id = u.id
         WHERE u.username = ?
         ORDER BY created DESC
         LIMIT 20 OFFSET ?"""
         to_execute_variables = (author_name, (page * 10) - 10,)
     else:
         to_execute_command = """
-        SELECT m.id, m.title, m.description, m.img_src, m.filename, m.created, u.username
-        FROM memes m LEFT JOIN user u ON m.author_id = u.id
+        SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username
+        FROM images i LEFT JOIN user u ON i.author_id = u.id
         ORDER BY created DESC
         LIMIT 20 OFFSET ?"""
         to_execute_variables = ((page * 10) - 10,)
@@ -45,16 +45,16 @@ def index(page=1, author_name=None):
     else:
         next_page = page+1
 
-    return render_template('homepage/index.html', memes=images_data, page=page, next_page=next_page, author=author_name)
+    return render_template('homepage/index.html', images=images_data, page=page, next_page=next_page, author=author_name)
 
 
 @bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
 def image_page(img_id):
     def get_image(image_id):
         image = get_db().execute("""
-        SELECT m.title, m.description, m.img_src, m.filename, m.created, u.username
-        FROM memes m LEFT JOIN user u ON m.author_id = u.id
-        WHERE m.id = ?""", (image_id,)).fetchone()
+        SELECT i.title, i.description, i.img_src, i.filename, i.created, u.username
+        FROM images i LEFT JOIN user u ON i.author_id = u.id
+        WHERE i.id = ?""", (image_id,)).fetchone()
 
         if image is None:
             abort(404)
@@ -63,9 +63,9 @@ def image_page(img_id):
 
     def get_comments(image_id):
         comments = get_db().execute("""
-        SELECT c.body, c.created, memes_id, u.username
+        SELECT c.body, c.created, u.username
         FROM comments c LEFT JOIN user u ON c.author_id = u.id
-        WHERE memes_id = ?
+        WHERE image_id = ?
         ORDER BY created DESC""", (image_id,)).fetchall()
 
         if comments is None:
@@ -83,7 +83,7 @@ def image_page(img_id):
         if error is None:
             db = get_db()
             db.execute(
-                'INSERT INTO comments (author_id, memes_id, body)'
+                'INSERT INTO comments (author_id, image_id, body)'
                 'VALUES (?, ?, ?)',
                 (g.user['id'], img_id, body)
             )
@@ -91,7 +91,7 @@ def image_page(img_id):
             return redirect(request.url)
         flash(error)
 
-    return render_template('homepage/image_page.html', meme=get_image(img_id), comments=get_comments(img_id))
+    return render_template('homepage/image_page.html', image=get_image(img_id), comments=get_comments(img_id))
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -115,7 +115,7 @@ def create():
             db = get_db()
             filename = upload_image(current_app.config['UPLOAD_FOLDER'], file)
             db.execute(
-                'INSERT INTO memes (title, author_id, description, filename)'
+                'INSERT INTO images (title, author_id, description, filename)'
                 ' VALUES (?, ?, ?, ?)',
                 (title, g.user['id'], description, filename)
             )

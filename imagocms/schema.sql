@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS memes;
-DROP TABLE IF EXISTS commentary;
+DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS comments;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,11 +11,11 @@ CREATE TABLE user (
     superuser BOOLEAN CHECK (superuser IN (0, 1))
 );
 
-CREATE TABLE memes (
+CREATE TABLE images (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    title TEXT,
+    title TEXT NOT NULL,
     description TEXT,
     filename TEXT UNIQUE,
     img_src TEXT UNIQUE,
@@ -27,9 +27,9 @@ CREATE TABLE memes (
 CREATE TABLE comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
-    memes_id INTEGER NOT NULL,
+    image_id INTEGER NOT NULL,
     body TEXT NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES user (id) ON DELETE CASCADE,
-    FOREIGN KEY (memes_id) REFERENCES memes (id) ON DELETE CASCADE
+    FOREIGN KEY (image_id) REFERENCES images (id) ON DELETE CASCADE
 );

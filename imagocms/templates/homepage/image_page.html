@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}{{ meme['title'] }}{% endblock %}
+{% block title %}{{ image['title'] }}{% endblock %}
 
 {% block content %}
 <article>
-    <div class="meme">
-        <h2 class="meme-title">{{ meme['title'] }}</h2>
-        <div class="meme-details">
+    <div class="image">
+        <h2 class="image-title">{{ image['title'] }}</h2>
+        <div class="image-details">
         <p>
-            <a href="{{ url_for('homepage.index', page=1, author_name=meme['username']) }}" class="username">
-                {{ meme['username'] }}</a>
-            {{ meme['created'].strftime('%Y-%m-%d') }}</p>
-            {% if meme['description'] %}
-                <p class="description">{{ meme['description'] }}</p>
+            <a href="{{ url_for('homepage.index', page=1, author_name=image['username']) }}" class="username">
+                {{ image['username'] }}</a>
+            {{ image['created'].strftime('%Y-%m-%d') }}</p>
+            {% if image['description'] %}
+                <p class="description">{{ image['description'] }}</p>
             {% endif %}
         </div>
 
-        {% if meme['filename'] %}
-            <img src="{{ url_for('static', filename='images/'+meme['filename']) }}" class="meme-image" name="{{ meme['title'] }}"
-                 alt="{% if meme['description'] %}{{ meme['description'] }}{% else %}{{ meme['title'] }}{% endif %}">
+        {% if image['filename'] %}
+            <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
+                 alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
         {% else %}
-            <img src="{{ meme['img_src'] }}" class="meme-image" alt="{{ meme['title'] }}" name="{{ meme['title'] }}">
+            <img src="{{ image['img_src'] }}" class="image-image" alt="{{ image['title'] }}" name="{{ image['title'] }}">
         {% endif %}
     </div>
 </article>

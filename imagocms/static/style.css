@@ -51,7 +51,7 @@ article{
   max-width: 1600px;
   margin: auto;
 }
-.meme{
+.image{
  background-color: #1f1f1f;
  max-width: 750px;
  margin: auto;
@@ -91,7 +91,7 @@ a.nav-link:hover {
 .add-new {
   font-size: 1.8rem;
 }
-.meme-details {
+.image-details {
     margin: 5px 0;
 }
 .error-messages {
