@@ -7,17 +7,17 @@
     <img src="{{ url_for('static', filename='logotype_426x128.webp') }}" width="380" height="114"></div>
       <h1 class="title">Rejestracja</h1>
      <div class="input-container ic1">
-        <input id="username" name="username" class="input" type="text" placeholder=" " required/>
+        <input id="username" name="username" class="input" type="text" placeholder=" " maxlength="15" required/>
         <div class="cut"></div>
         <label for="username" class="placeholder">Login</label>
       </div>
       <div class="input-container ic2">
-        <input id="password" name="password" class="input" type="password" placeholder=" " required/>
+        <input id="password" name="password" class="input" type="password" placeholder=" " maxlength="256" required/>
         <div class="cut"></div>
         <label for="password" class="placeholder">Hasło</label>
       </div>
       <div class="input-container ic2">
-        <input id="email" name="email" class="input" type="email" placeholder=" " />
+        <input id="email" name="email" class="input" type="email" placeholder=" " maxlength="320"/>
         <div class="cut cut-long"></div>
         <label for="email" class="placeholder">Email (opcjonalnie)</label>
       </div>

@@ -1,25 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}{{ image['title'] }}{% endblock %}
+{% block title %}{{ image_page_data[0]['title'] }}{% endblock %}
 
 {% block content %}
 <article>
     <div class="image">
-        <h2 class="image-title">{{ image['title'] }}</h2>
+        <h2 class="image-title">{{ image_page_data[0]['title'] }}</h2>
         <div class="image-details">
         <p>
-            <a href="{{ url_for('homepage.index', page=1, author_name=image['username']) }}" class="username">
-                {{ image['username'] }}</a>
-            {{ image['created'].strftime('%Y-%m-%d') }}</p>
-            {% if image['description'] %}
-                <p class="description">{{ image['description'] }}</p>
+            <a href="{{ url_for('homepage.index', page=1, author_name=image_page_data[0]['img_author']) }}" class="username">
+                {{ image_page_data[0]['img_author'] }}</a>
+            {{ image_page_data[0]['img_created'].strftime('%Y-%m-%d') }}</p>
+            {% if image_page_data[0]['description'] %}
+                <p class="description">{{ image_page_data[0]['description'] }}</p>
             {% endif %}
         </div>
-
-        {% if image['filename'] %}
-            <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
-                 alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+        {% if image_page_data[0]['filename'] %}
+            <img src="{{ url_for('static', filename='images/'+image_page_data[0]['filename']) }}" class="image-image" name="{{ image_page_data[0]['title'] }}"
+                 alt="{% if image_page_data[0]['description'] %}{{ image_page_data[0]['description'] }}{% else %}{{ image_page_data[0]['title'] }}{% endif %}">
         {% else %}
-            <img src="{{ image['img_src'] }}" class="image-image" alt="{{ image['title'] }}" name="{{ image['title'] }}">
+            <img src="{{ image_page_data[0]['img_src'] }}" class="image-image" alt="{{ image_page_data[0]['title'] }}" name="{{ image_page_data[0]['title'] }}">
         {% endif %}
     </div>
 </article>
@@ -36,14 +35,16 @@
         </form>
     </div>
 <div class="all-comments">
-    {% for comment in comments %}
-    <div class="comment">
-        <p><a href="{{ url_for('homepage.index', page=1, author_name=comment['username']) }}" class="username">
-                {{ comment['username'] }}</a>
-            <span style="font-size: 1.4rem;">{{ comment['created'].strftime('%Y-%m-%d') }}</span></p>
-        <p class="body">{{ comment['body'] }}</p>
-    </div>
-    {% endfor %}
+    {% if image_page_data[0]['body'] %}
+        {% for comment in image_page_data %}
+        <div class="comment">
+            <p><a href="{{ url_for('homepage.index', page=1, author_name=comment['c_author']) }}" class="username">
+                    {{ comment['c_author'] }}</a>
+                <span style="font-size: 1.4rem;">{{ comment['c_created'].strftime('%Y-%m-%d') }}</span></p>
+            <p class="body">{{ comment['body'] }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
 </div>
         </div>
 </section>

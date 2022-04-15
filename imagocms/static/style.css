@@ -92,7 +92,19 @@ a.nav-link:hover {
   font-size: 1.8rem;
 }
 .image-details {
-  margin: 5px 0;
+  display: flex;
+  width: 100%;
+}
+img.comments-image {
+  padding: 4px;
+}
+.homepage-comments {
+  display: flex;
+  align-items: end;
+  margin-left: auto;
+}
+.author-and-data {
+  max-width: 80%;
 }
 .error-messages {
   position: absolute;
@@ -278,6 +290,11 @@ img.submit-image {
 p.body {
   overflow-wrap: break-word;
   color: #fff;
+}
+.description {
+  resize: none;
+  height: 112px;
+  font-size: 1.8rem;
 }
 .comment-input {
   width: 100%;

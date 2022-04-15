@@ -1,8 +1,4 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS comments;
-
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
@@ -11,7 +7,7 @@ CREATE TABLE user (
     superuser BOOLEAN CHECK (superuser IN (0, 1))
 );
 
-CREATE TABLE images (
+CREATE TABLE IF NOT EXISTS images (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -24,7 +20,7 @@ CREATE TABLE images (
     CHECK (filename is not null or img_src is not null)
 );
 
-CREATE TABLE comments (
+CREATE TABLE IF NOT EXISTS comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
     image_id INTEGER NOT NULL,

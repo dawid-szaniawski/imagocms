@@ -1,19 +1,14 @@
-import uuid
 import os
 from werkzeug.utils import secure_filename
+import imghdr
+from imagocms.utilities.string_operations import change_name
 
 
-def allowed_file(allowed_extensions, filename):
+def allowed_file(allowed_extensions, file):
     allowed_extensions = allowed_extensions
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-
-def generate_random_string():
-    return str(uuid.uuid4())
-
-
-def change_name(file):
-    return generate_random_string()+'.'+file.rsplit('.', 1)[1].lower()
+    if not imghdr.what(file) in allowed_extensions:
+        return False
+    return '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 def upload_image(upload_folder, file):
