@@ -2,9 +2,7 @@ CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    email TEXT UNIQUE,
-    moderator BOOLEAN CHECK (moderator IN (0, 1)),
-    superuser BOOLEAN CHECK (superuser IN (0, 1))
+    email TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS images (

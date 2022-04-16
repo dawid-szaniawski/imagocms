@@ -28,8 +28,7 @@ def login():
                 session.clear()
                 session['user_id'] = user['id']
                 return redirect(url_for('index'))
-            else:
-                error = 'Nieprawidłowe hasło'
+            error = 'Nieprawidłowe hasło'
 
         flash(error)
 
@@ -89,26 +88,6 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
-
-
-def moderator_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user['superuser'] == 1 or g.user['moderator'] == 1:
-            return view(**kwargs)
-        session.clear()
-        return redirect(url_for('auth.login'))
-    return wrapped_view
-
-
-def superuser_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None or g.user['superuser'] != 1:
-            session.clear()
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view
