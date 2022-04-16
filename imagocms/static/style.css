@@ -98,6 +98,9 @@ a.nav-link:hover {
 img.comments-image {
   padding: 4px;
 }
+img.image-image {
+    margin-top: 8px;
+}
 .homepage-comments {
   display: flex;
   align-items: end;

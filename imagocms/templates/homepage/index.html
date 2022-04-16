@@ -29,7 +29,8 @@
             <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
                  alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
         {% else %}
-            <img src="{{ image['img_src'] }}" class="image-image" alt="{{ image['title'] }}" name="{{ image['title'] }}">
+            <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
+            alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
         {% endif %}
         </a>
 

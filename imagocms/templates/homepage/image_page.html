@@ -6,14 +6,22 @@
     <div class="image">
         <h2 class="image-title">{{ image_page_data[0]['title'] }}</h2>
         <div class="image-details">
-        <p>
+        <p class="author-and-data">
             <a href="{{ url_for('homepage.index', page=1, author_name=image_page_data[0]['img_author']) }}" class="username">
                 {{ image_page_data[0]['img_author'] }}</a>
             {{ image_page_data[0]['img_created'].strftime('%Y-%m-%d') }}</p>
-            {% if image_page_data[0]['description'] %}
-                <p class="description">{{ image_page_data[0]['description'] }}</p>
-            {% endif %}
+
+        <div class="homepage-comments">
+            <img src="{{ url_for('static', filename='comments_16.png') }}" width="16" height="16" class="comments-image">
+            {{ image_page_data[0]['c_count'] }}
         </div>
+        </div>
+            {% if image_page_data[0]['description'] %}
+        <div class="description">
+                <p class="description">{{ image_page_data[0]['description'] }}</p>
+        </div>
+            {% endif %}
+
         {% if image_page_data[0]['filename'] %}
             <img src="{{ url_for('static', filename='images/'+image_page_data[0]['filename']) }}" class="image-image" name="{{ image_page_data[0]['title'] }}"
                  alt="{% if image_page_data[0]['description'] %}{{ image_page_data[0]['description'] }}{% else %}{{ image_page_data[0]['title'] }}{% endif %}">
@@ -24,6 +32,7 @@
 </article>
 <section class="comments-wrapper">
     <div class="comments">
+  {% if g.user %}
     <div class="add-comment">
         <form method="post" class="add-comment-form">
             <div class="comment-input">
@@ -34,6 +43,7 @@
             </button>
         </form>
     </div>
+  {% endif %}
 <div class="all-comments">
     {% if image_page_data[0]['body'] %}
         {% for comment in image_page_data %}
