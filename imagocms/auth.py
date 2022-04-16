@@ -3,6 +3,8 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from werkzeug.security import check_password_hash, generate_password_hash
 from imagocms.db import get_db
 
+from imagocms.utilities.string_operations import check_correctness_of_the_data
+
 
 bp = Blueprint('auth', __name__, url_prefix='/login')
 
@@ -12,23 +14,22 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
 
-        if user is None:
-            print('no name')
-            error = 'Nieprawidłowa nazwa użytkownika'
-        elif not check_password_hash(user['password'], password):
-            print('no pass')
-            error = 'Nieprawidłowe hasło'
+        if not check_correctness_of_the_data(username, password):
+            error = 'Wprowadzone dane są nieprawidłowe.'
 
         if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            db = get_db()
+            user = db.execute(
+                'SELECT id, password FROM user WHERE username = ?', (username,)
+            ).fetchone()
+            if check_password_hash(user['password'], password):
+                session.clear()
+                session['user_id'] = user['id']
+                return redirect(url_for('index'))
+            else:
+                error = 'Nieprawidłowe hasło'
 
         flash(error)
 
@@ -43,16 +44,13 @@ def register():
         email = request.form['email']
         error = None
 
-        if not username:
-            error = 'Nazwa użytkownika jest wymagana.'
-        elif not password:
-            error = 'Musisz podać hasło.'
+        if not check_correctness_of_the_data(username, password, email):
+            error = 'Wprowadzone dane są nieprawidłowe.'
         elif email == '':
             email = None
 
         if error is None:
             db = get_db()
-
             try:
                 db.execute(
                     "INSERT INTO user (username, password, email) VALUES (?, ?, ?)",

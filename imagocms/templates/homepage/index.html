@@ -8,20 +8,29 @@
         <h2 class="image-title">
             <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" >{{ image['title'] }}</a></h2>
         <div class="image-details">
-        <p>
+        <p class="author-and-data">
             <a href="{{ url_for('homepage.index', page=1, author_name=image['username']) }}" class="username">
                 {{ image['username'] }}</a>
             {{ image['created'].strftime('%Y-%m-%d') }}</p>
-            {% if image['description'] %}
-                <p class="description">{{ image['description'] }}</p>
-            {% endif %}
+        <div class="homepage-comments">
+            <img src="{{ url_for('static', filename='comments_16.png') }}" width="16" height="16" class="comments-image">
+            {{ image['comments'] }}
         </div>
+        </div>
+
+            {% if image['description'] %}
+            <div class="description">
+                <p class="description">{{ image['description'] }}</p>
+            </div>
+            {% endif %}
+
         <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" >
         {% if image['filename'] %}
             <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
                  alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
         {% else %}
-            <img src="{{ image['img_src'] }}" class="image-image" alt="{{ image['title'] }}" name="{{ image['title'] }}">
+            <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
+            alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
         {% endif %}
         </a>
 

@@ -17,6 +17,11 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    try:
+        os.mkdir(app.instance_path)
+    except OSError:
+        pass
+
     from imagocms import db, auth, panel, homepage
     db.init_app(app)
     app.register_blueprint(auth.bp)
