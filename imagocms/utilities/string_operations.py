@@ -10,7 +10,7 @@ def change_name(file):
 
 
 def check_correctness_of_the_data(user_login, user_password, user_email=''):
-    forbidden_chars = '"#$%^&*\\()=, „”-/<>|;'
+    forbidden_chars = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
 
     if user_login is None or user_password is None:
         return False
