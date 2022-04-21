@@ -11,6 +11,11 @@ bp = Blueprint('create', __name__, url_prefix='/create')
 @bp.route('/', methods=('GET', 'POST'))
 @login_required
 def create():
+    """
+    The route to add posts (usually images). Checks whether the user has inserted the title and added graphics
+    or description. Verifies the correctness of the data and uploads it to the database. If the user has added an image,
+    it also calls the method that saves the attachment on the server.
+    """
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
@@ -22,16 +27,20 @@ def create():
             error = 'Tytuł jest wymagany.'
         elif len(title) > 80:
             error = 'Tytuł może mieć maksymalnie 80 znaków.'
-        elif not file or file.filename == '':
-            error = 'Proszę załączyć plik'
-        elif not allowed_file(allowed_extensions, file):
-            error = 'Nieprawidłowe rozszerzenie pliku.'
+        elif not file and description == '':
+            error = 'Proszę załączyć plik lub uzupełnić pole Opis.'
         elif description == '':
             description = None
+        elif file:
+            if not allowed_file(allowed_extensions, file):
+                error = 'Nieprawidłowe rozszerzenie pliku.'
 
         if error is None:
             db = get_db()
-            filename = upload_image(current_app.config['UPLOAD_FOLDER'], file)
+            if file:
+                filename = upload_image(current_app.config['UPLOAD_FOLDER'], file)
+            else:
+                filename = None
             db.execute(
                 'INSERT INTO images (title, author_id, description, filename)'
                 ' VALUES (?, ?, ?, ?)',
@@ -41,7 +50,7 @@ def create():
             return redirect(url_for('homepage.index'))
 
         flash(error)
-    return render_template('homepage/create.html')
+    return render_template('add_image/create.html')
 
 
 @bp.errorhandler(413)

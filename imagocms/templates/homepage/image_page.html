@@ -22,12 +22,14 @@
         </div>
             {% endif %}
 
+    {% if image_page_data[0]['filename'] or image_page_data[0]['img_src'] %}
         {% if image_page_data[0]['filename'] %}
             <img src="{{ url_for('static', filename='images/'+image_page_data[0]['filename']) }}" class="image-image" name="{{ image_page_data[0]['title'] }}"
                  alt="{% if image_page_data[0]['description'] %}{{ image_page_data[0]['description'] }}{% else %}{{ image_page_data[0]['title'] }}{% endif %}">
         {% else %}
             <img src="{{ image_page_data[0]['img_src'] }}" class="image-image" alt="{{ image_page_data[0]['title'] }}" name="{{ image_page_data[0]['title'] }}">
-        {% endif %}
+        {% endif %}{% endif %}
+
     </div>
 </article>
 <section class="comments-wrapper">

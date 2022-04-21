@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS images (
     img_src TEXT UNIQUE,
     accepted BOOLEAN CHECK (accepted IN (0, 1)),
     FOREIGN KEY (author_id) REFERENCES user (id) ON DELETE CASCADE,
-    CHECK (filename is not null or img_src is not null)
+    CHECK (filename IS NOT NULL OR img_src IS NOT NULL OR description IS NOT NULL)
 );
 
 CREATE TABLE IF NOT EXISTS comments (

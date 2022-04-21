@@ -19,11 +19,15 @@ def login():
         if not check_correctness_of_the_data(username, password):
             error = 'Wprowadzone dane są nieprawidłowe.'
 
+        db = get_db()
+        user = db.execute(
+            'SELECT id, password FROM user WHERE username = ?', (username,)
+        ).fetchone()
+
+        if user is None:
+            error = 'Użytkownik o takim loginie nie istnieje.'
+
         if error is None:
-            db = get_db()
-            user = db.execute(
-                'SELECT id, password FROM user WHERE username = ?', (username,)
-            ).fetchone()
             if check_password_hash(user['password'], password):
                 session.clear()
                 session['user_id'] = user['id']

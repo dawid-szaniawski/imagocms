@@ -1,15 +1,24 @@
 import uuid
 
 
-def generate_random_string():
-    return str(uuid.uuid4())
+def change_name(file: str) -> str:
+    """
+    Creates a new file name based on the UUID4 and previous file extension.
+
+    Args:
+        file: file.filename from flask form.
+
+    Returns:
+        new filename - randomly generated uuid4+extension.
+    """
+    return str(uuid.uuid4())+'.'+file.rsplit('.', 1)[1].lower()
 
 
-def change_name(file):
-    return generate_random_string()+'.'+file.rsplit('.', 1)[1].lower()
-
-
-def check_correctness_of_the_data(user_login, user_password, user_email=''):
+def check_correctness_of_the_data(user_login: str, user_password: str, user_email: str = '') -> bool:
+    """
+    Checks if the user has entered login, password, and email address (optional).
+    Additionally, it verifies that they are of the correct length and that they do not contain forbidden characters.
+    """
     forbidden_chars = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
 
     if user_login is None or user_password is None:
