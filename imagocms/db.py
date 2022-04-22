@@ -23,6 +23,9 @@ def close_db(e=None):
 
 
 def init_db(app):
+    """
+    Initiates database and execute instructions from schema.sql file
+    """
     with app.app_context():
         db = get_db()
         with app.open_resource('schema.sql', mode='r') as f:
@@ -31,7 +34,7 @@ def init_db(app):
 
 def init_app(app):
     """
-    Register close_db.
+    Register close_db and use init_db method.
     """
     app.teardown_appcontext(close_db)
     init_db(app)

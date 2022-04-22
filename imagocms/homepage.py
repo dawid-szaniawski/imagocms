@@ -49,17 +49,6 @@ def index(page=1, author_name=None):
 
 @bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
 def image_page(img_id):
-    def get_image_and_comments(image_id):
-        return get_db().execute("""
-        SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created, img_u.username AS img_author,
-        c.body, c.created AS c_created, u.username AS c_author, counter.c_count
-        FROM images i
-        LEFT JOIN user img_u ON i.author_id = img_u.id
-        LEFT JOIN comments c ON i.id = c.image_id
-        LEFT JOIN user u ON c.author_id = u.id
-        CROSS JOIN (SELECT COUNT(*) AS c_count FROM comments c2 WHERE c2.image_id = ?) counter
-        WHERE i.id = ? ORDER BY c_created DESC""", (image_id, image_id)).fetchall()
-
     if request.method == 'POST':
         body = request.form['comment']
         error = None
@@ -76,4 +65,14 @@ def image_page(img_id):
             return redirect(request.url)
         flash(error)
 
-    return render_template('homepage/image_page.html', image_page_data=get_image_and_comments(img_id))
+    image_page_data = get_db().execute("""
+    SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created, img_u.username AS img_author,
+    c.body, c.created AS c_created, u.username AS c_author, counter.c_count
+    FROM images i
+    LEFT JOIN user img_u ON i.author_id = img_u.id
+    LEFT JOIN comments c ON i.id = c.image_id
+    LEFT JOIN user u ON c.author_id = u.id
+    CROSS JOIN (SELECT COUNT(*) AS c_count FROM comments c2 WHERE c2.image_id = ?) counter
+    WHERE i.id = ? ORDER BY c_created DESC""", (img_id, img_id)).fetchall()
+
+    return render_template('homepage/image_page.html', image_page_data=image_page_data)
