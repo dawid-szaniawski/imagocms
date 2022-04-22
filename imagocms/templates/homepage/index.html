@@ -19,20 +19,22 @@
         </div>
 
             {% if image['description'] %}
-            <div class="description">
-                <p class="description">{{ image['description'] }}</p>
+            <div class="description-div">
+                <p class="description-p">{{ image['description'] }}</p>
             </div>
             {% endif %}
 
-        <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" >
-        {% if image['filename'] %}
-            <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
-                 alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
-        {% else %}
-            <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
-            alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+        {% if image['filename'] or image['img_src'] %}
+            <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" >
+            {% if image['filename'] %}
+                <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
+                     alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+            {% else %}
+                <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
+                alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+            {% endif %}
+            </a>
         {% endif %}
-        </a>
 
     </div>
 </article>

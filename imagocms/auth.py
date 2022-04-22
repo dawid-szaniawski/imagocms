@@ -19,17 +19,20 @@ def login():
         if not check_correctness_of_the_data(username, password):
             error = 'Wprowadzone dane są nieprawidłowe.'
 
+        db = get_db()
+        user = db.execute(
+            'SELECT id, password FROM user WHERE username = ?', (username,)
+        ).fetchone()
+
+        if user is None:
+            error = 'Użytkownik o takim loginie nie istnieje.'
+
         if error is None:
-            db = get_db()
-            user = db.execute(
-                'SELECT id, password FROM user WHERE username = ?', (username,)
-            ).fetchone()
             if check_password_hash(user['password'], password):
                 session.clear()
                 session['user_id'] = user['id']
                 return redirect(url_for('index'))
-            else:
-                error = 'Nieprawidłowe hasło'
+            error = 'Nieprawidłowe hasło'
 
         flash(error)
 
@@ -89,26 +92,6 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
-
-
-def moderator_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user['superuser'] == 1 or g.user['moderator'] == 1:
-            return view(**kwargs)
-        session.clear()
-        return redirect(url_for('auth.login'))
-    return wrapped_view
-
-
-def superuser_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None or g.user['superuser'] != 1:
-            session.clear()
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view

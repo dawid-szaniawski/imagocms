@@ -22,10 +22,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from imagocms import db, auth, panel, homepage
+    from imagocms import db, auth, homepage, add_image
     db.init_app(app)
     app.register_blueprint(auth.bp)
-    app.register_blueprint(panel.bp)
+    app.register_blueprint(add_image.bp)
     app.register_blueprint(homepage.bp)
     app.add_url_rule('/', endpoint='index')
 
