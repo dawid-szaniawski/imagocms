@@ -10,10 +10,15 @@ bp = Blueprint('homepage', __name__)
 @bp.route('/page:<int:page>')
 @bp.route('/author:<author_name>')
 @bp.route('/author:<author_name>/page:<int:page>')
-def index(page=1, author_name=None):
-    def split_list(object_to_split):
-        return object_to_split[:10], object_to_split[10:]
+def index(page: int = 1, author_name: str = None):
+    """
+    Route for the home page. It can take two optional arguments.
+    Shows the newest post with its title, description, image, and the number of comments.
 
+    Args:
+        page = int. On one page we show 10 post.
+        author_name = str. Show only post from that author.
+    """
     db = get_db()
 
     if author_name:
@@ -34,9 +39,10 @@ def index(page=1, author_name=None):
         LIMIT 11 OFFSET ?"""
         to_execute_variables = ((page * 10) - 10,)
 
-    images_data, next_page_data = split_list(db.execute(to_execute_command, to_execute_variables).fetchall())
+    images_data = db.execute(to_execute_command, to_execute_variables).fetchall()
+    images, next_page_data = images_data[:10], images_data[10:]
 
-    if not images_data and page != 1:
+    if not images and page != 1:
         abort(404)
 
     if not next_page_data:
@@ -44,11 +50,17 @@ def index(page=1, author_name=None):
     else:
         next_page = page+1
 
-    return render_template('homepage/index.html', images=images_data, page=page, next_page=next_page, author=author_name)
+    return render_template('homepage/index.html', images=images, page=page, next_page=next_page, author=author_name)
 
 
 @bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
-def image_page(img_id):
+def image_page(img_id: int):
+    """
+    Route for single post page. It takes one argument and shows the post and all the comments related to the post.
+
+    Args:
+        img_id: int. Unique ID number from the database.
+    """
     if request.method == 'POST':
         body = request.form['comment']
         error = None

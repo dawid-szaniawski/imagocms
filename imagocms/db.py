@@ -15,6 +15,9 @@ def get_db():
 def close_db(e=None):
     """
     Checks if a connection was created by checking if g.db was set. If connection exist, it is closed.
+
+    Args:
+        e: refers to the error object. None by default.
     """
     db = g.pop('db', None)
 
