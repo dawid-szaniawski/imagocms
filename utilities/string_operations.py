@@ -1,5 +1,7 @@
 import uuid
 
+import bs4.element
+
 
 def change_name(file: str) -> str:
     """
@@ -31,3 +33,10 @@ def check_correctness_of_the_data(user_login: str, user_password: str, user_emai
             return False
 
     return True
+
+
+def prepare_src_and_alt(images_data: bs4.element.ResultSet) -> dict:
+    """
+    A method that extracts the source of the image and its alt from the bs4.element.ResultSet object.
+    """
+    return {image['src']: image['alt'] for image in images_data}

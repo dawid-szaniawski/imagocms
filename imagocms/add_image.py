@@ -1,9 +1,7 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, current_app
-
 from imagocms.db import get_db
 from imagocms.auth import login_required
-
-from imagocms.utilities.file_operations import allowed_file, upload_image
+from utilities.file_operations import allowed_file, upload_image
 
 bp = Blueprint('create', __name__, url_prefix='/create')
 
@@ -38,12 +36,11 @@ def create():
         if error is None:
             db = get_db()
             if file:
-                filename = upload_image(current_app.config['UPLOAD_FOLDER'], file)
+                filename = upload_image(file)
             else:
                 filename = None
             db.execute(
-                'INSERT INTO images (title, author_id, description, filename)'
-                ' VALUES (?, ?, ?, ?)',
+                'INSERT INTO images (title, author_id, description, filename, accepted) VALUES (?, ?, ?, ?, 0)',
                 (title, g.user['id'], description, filename)
             )
             db.commit()
@@ -55,5 +52,8 @@ def create():
 
 @bp.errorhandler(413)
 def request_entity_too_large(error):
+    """
+    If the file is too large, we will flash an error instead of redirect to the error page.
+    """
     flash('Maksymalna wielkość pliku to 2MB')
     return redirect(request.url)
