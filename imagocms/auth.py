@@ -2,8 +2,7 @@ import functools
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from imagocms.db import get_db
-
-from imagocms.utilities.string_operations import check_correctness_of_the_data
+from utilities.string_operations import check_correctness_of_the_data
 
 
 bp = Blueprint('auth', __name__, url_prefix='/login')
@@ -56,7 +55,7 @@ def register():
             db = get_db()
             try:
                 db.execute(
-                    "INSERT INTO user (username, password, email) VALUES (?, ?, ?)",
+                    'INSERT INTO user (username, password, email) VALUES (?, ?, ?)',
                     (username, generate_password_hash(password), email),
                 )
                 db.commit()

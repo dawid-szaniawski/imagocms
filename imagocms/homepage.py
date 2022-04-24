@@ -7,9 +7,9 @@ bp = Blueprint('homepage', __name__)
 
 
 @bp.route('/')
-@bp.route('/page:<int:page>')
+@bp.route('/<int:page>')
 @bp.route('/author:<author_name>')
-@bp.route('/author:<author_name>/page:<int:page>')
+@bp.route('/author:<author_name>/<int:page>')
 def index(page: int = 1, author_name: str = None):
     """
     Route for the home page. It can take two optional arguments.
@@ -24,16 +24,20 @@ def index(page: int = 1, author_name: str = None):
     if author_name:
         to_execute_command = """
         SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
-        FROM images i LEFT JOIN user u ON i.author_id = u.id LEFT JOIN comments c ON i.id = c.image_id
-        GROUP BY i.id
+        FROM images i
+        LEFT JOIN user u ON i.author_id = u.id
+        LEFT JOIN comments c ON i.id = c.image_id
         WHERE u.username = ?
+        GROUP BY i.id
         ORDER BY i.created DESC
         LIMIT 11 OFFSET ?"""
         to_execute_variables = (author_name, (page * 10) - 10,)
     else:
         to_execute_command = """
         SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
-        FROM images i LEFT JOIN user u ON i.author_id = u.id LEFT JOIN comments c ON i.id = c.image_id
+        FROM images i
+        LEFT JOIN user u ON i.author_id = u.id
+        LEFT JOIN comments c ON i.id = c.image_id
         GROUP BY i.id
         ORDER BY i.created DESC
         LIMIT 11 OFFSET ?"""
@@ -70,9 +74,10 @@ def image_page(img_id: int):
 
         if error is None:
             db = get_db()
-            db.execute("""
-            INSERT INTO comments (author_id, image_id, body)
-            VALUES (?, ?, ?)""", (g.user['id'], img_id, body))
+            db.execute(
+                'INSERT INTO comments (author_id, image_id, body) VALUES (?, ?, ?)',
+                (g.user['id'], img_id, body)
+            )
             db.commit()
             return redirect(request.url)
         flash(error)

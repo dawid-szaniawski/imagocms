@@ -45,6 +45,10 @@
             </button>
         </form>
     </div>
+  {% else %}
+    <div class="add-comment">
+        <span>Tylko zalogowany użytkownik może dodać komentarze.</span>
+    </div>
   {% endif %}
 <div class="all-comments">
     {% if image_page_data[0]['body'] %}
