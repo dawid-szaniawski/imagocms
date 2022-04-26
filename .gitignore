@@ -1,5 +1,4 @@
 instance/
-
 venv/
 
 .idea/
@@ -53,4 +52,3 @@ ENV/
 env.bak/
 venv.bak/
 .pytype/
-tests/
