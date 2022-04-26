@@ -13,13 +13,12 @@ def start_sync(websites_data: list, pages: int = 1) -> list:
         websites_data: a list of sqlite3.Row object. It should contain minimum three columns:
             - website_url: string containing url of scraped website,
             - image_class: string containing class of the images in the HTML DOM,
-            - website_user_id: Integer. User ID from database.
+            - website_user_id: Integer. User ID from database,
             - pagination_class: *optional* string containing a class of link to go to the next subpage.
-        pages: the number of consecutive subpages of the site to be scanned
+        pages: the number of consecutive subpages of the site to be scanned.
 
     Returns:
-        list of  tuples containing website_user_id, images.filename, images.title.
-    """
+        list of  tuples containing website_user_id, images.filename, images.title."""
     to_return = []
     for website in websites_data:
         additional_pages = pages
@@ -48,5 +47,5 @@ def start_sync(websites_data: list, pages: int = 1) -> list:
                 [(website['website_user_id'], filename, title)
                  for filename, title in zip(site_names, site_src_and_alt.values())])
             additional_pages -= 1
-    print(to_return)
+
     return to_return
