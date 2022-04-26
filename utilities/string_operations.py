@@ -1,26 +1,21 @@
 import uuid
+from bs4.element import ResultSet
 
-import bs4.element
 
-
-def change_name(file: str) -> str:
-    """
-    Creates a new file name based on the UUID4 and previous file extension.
+def change_name(file_name: str) -> str:
+    """Creates a new file name based on the UUID4 and previous file extension.
 
     Args:
-        file: file.filename from flask form.
+        file_name: file.filename from flask form.
 
     Returns:
-        new filename - randomly generated uuid4+extension.
-    """
-    return str(uuid.uuid4())+'.'+file.rsplit('.', 1)[1].lower()
+        new filename - randomly generated uuid4+extension."""
+    return str(uuid.uuid4())+'.'+file_name.rsplit('.', 1)[1].lower()
 
 
 def check_correctness_of_the_data(user_login: str, user_password: str, user_email: str = '') -> bool:
-    """
-    Checks if the user has entered login, password, and email address (optional).
-    Additionally, it verifies that they are of the correct length and that they do not contain forbidden characters.
-    """
+    """Checks if the user has entered login, password, and email address (optional).
+    Additionally, it verifies that they are of the correct length and that they do not contain forbidden characters."""
     forbidden_chars = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
 
     if user_login is None or user_password is None:
@@ -35,8 +30,6 @@ def check_correctness_of_the_data(user_login: str, user_password: str, user_emai
     return True
 
 
-def prepare_src_and_alt(images_data: bs4.element.ResultSet) -> dict:
-    """
-    A method that extracts the source of the image and its alt from the bs4.element.ResultSet object.
-    """
+def prepare_src_and_alt(images_data: ResultSet) -> dict:
+    """A method that extracts the source of the image and its alt from the ResultSet object."""
     return {image['src']: image['alt'] for image in images_data}
