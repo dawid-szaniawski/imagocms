@@ -305,6 +305,14 @@ p.body {
   font-size: 1.4rem;
   margin-right: 8px;
 }
+a.comments-link {
+  text-decoration: none;
+  color: #777;
+  transition: .5s;
+}
+a.comments-link:hover {
+  text-decoration: underline;
+}
 @media screen and (min-width: 400px) and (min-height: 670px) {
   .form-body {
   height: 85vh;
