@@ -1,4 +1,5 @@
 import uuid
+
 from bs4.element import ResultSet
 
 
@@ -20,11 +21,17 @@ def check_correctness_of_the_data(user_login: str, user_password: str, user_emai
 
     if user_login is None or user_password is None:
         return False
+    if user_login == '' or user_password == '':
+        return False
     if len(user_login) > 15 or len(user_password) > 256 or len(user_email) > 320:
         return False
 
     for i in forbidden_chars:
         if i in user_login or i in user_password or i in user_email:
+            return False
+
+    if user_email != '':
+        if not user_email.count('@') == 1:
             return False
 
     return True

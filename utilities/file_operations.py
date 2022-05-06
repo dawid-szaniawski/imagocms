@@ -1,9 +1,12 @@
 import os
+
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-import imghdr
-from utilities.string_operations import change_name
 from flask import current_app
+
+import imghdr
+
+from utilities.string_operations import change_name
 
 
 def allowed_file(allowed_extensions: set, file: FileStorage) -> bool:

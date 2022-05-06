@@ -1,25 +1,113 @@
-import pytest
 import random
 import string
+
+import pytest
+
 from utilities import string_operations
 
 
+def random_string_generator(size: int = 15, chars: str = '') -> str:
+    default_chars = string.ascii_letters + string.digits + chars
+    generated_string = ''.join(random.choice(default_chars) for _ in range(size))
+    if chars in generated_string:
+        return generated_string
+    return generated_string.join(random.choice(chars))
+
+
 class TestChangeName:
-    def test_file_split_positive(self):
-        jpeg = random_string_generator()+'.jpeg'
-        jpg = random_string_generator(68)+'.jpg'
+    filenames = (
+        string_operations.change_name(random_string_generator() + '.jpeg'),
+        string_operations.change_name(random_string_generator() + '.png'),
+        string_operations.change_name(random_string_generator() + '.jpg.webp'),
+        string_operations.change_name(random_string_generator() + '.jpeg.jpg.webp'),
+        string_operations.change_name(random_string_generator(128) + '.jpeg.png.webp'),
+        string_operations.change_name(random_string_generator(1) + '.jpg'),
+    )
+    expected_extensions = ('.jpeg', '.png', '.webp', '.webp', '.webp', '.jpg')
 
-        jpeg = string_operations.change_name(jpeg)
-        jpg = string_operations.change_name(jpg)
+    @pytest.mark.parametrize(('filename', 'expected_extension'), zip(filenames, expected_extensions))
+    def test_extension_should_be_correct(self, filename, expected_extension):
+        assert filename.count('.') == 1
+        assert filename[-5:] == expected_extension or filename[-4:] == expected_extension
 
-        assert jpeg[-5:] == '.jpeg'
-        assert jpg[-4:] == '.jpg'
-        assert len(jpeg[:-5]) == 36
-        assert len(jpg[:-4]) == 36
+    @pytest.mark.parametrize('filename', filenames)
+    def test_extension_should_be_in_lowercase(self, filename):
+        assert filename.rsplit('.', 1)[1].islower()
 
-    def test_file_split_negative(self):
-        pass
+    @pytest.mark.parametrize('filename', filenames)
+    def test_extension_should_be_in_right_length(self, filename):
+        if len(filename) == 40:
+            assert len(filename[:-4]) == 36
+        elif len(filename) == 41:
+            assert len(filename[:-5]) == 36
+        else:
+            raise AssertionError('Filename is too long.')
 
 
-def random_string_generator(size: int = 16, chars: str = string.ascii_letters + string.digits) -> str:
-    return ''.join(random.choice(chars) for _ in range(size))
+class TestCheckCorrectnessOfTheData:
+    forbidden = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
+    data_with_none = (
+        (None, None),
+        (random_string_generator(), None),
+        (None, random_string_generator()),
+        ('', ''),
+        (random_string_generator(16), ''),
+        ('', random_string_generator(16)),
+        (None, None),
+    )
+    to_long_data = (
+        (random_string_generator(16), random_string_generator(), (random_string_generator()+'@wp.com')),
+        (random_string_generator(), random_string_generator(257), (random_string_generator()+'@onet.pl')),
+        (random_string_generator(), random_string_generator(), (random_string_generator(311)+'@gmail.com')),
+        (random_string_generator(16), random_string_generator(257), (random_string_generator(311)+'@gmail.com')),
+        (random_string_generator(312), random_string_generator(624), (random_string_generator(1248)+'@gmail.com')),
+    )
+    correct_data = (
+        (random_string_generator(), random_string_generator(), random_string_generator()+'@wp.pl'),
+        (random_string_generator(), random_string_generator(), random_string_generator()+'@o2.pl'),
+        (random_string_generator(), random_string_generator(), random_string_generator()+'@gmail.com'),
+        (random_string_generator(), random_string_generator(),
+         random_string_generator()+'@'+random_string_generator(9)+'.pl'),
+    )
+    data_with_forbidden_char = (
+        (random_string_generator(chars=forbidden), random_string_generator(),
+         random_string_generator()+'@wp.pl'),
+        (random_string_generator(), random_string_generator(chars=forbidden),
+         random_string_generator()+'@wp.pl'),
+        (random_string_generator(), random_string_generator(),
+         random_string_generator(chars=forbidden)+'@wp.pl'),
+        (random_string_generator(), random_string_generator(chars=forbidden),
+         random_string_generator(chars=forbidden)+'@wp.pl'),
+        (random_string_generator(chars=forbidden), random_string_generator(chars=forbidden),
+         random_string_generator()+'@wp.pl'),
+        (random_string_generator(chars=forbidden), random_string_generator(),
+         random_string_generator(chars=forbidden)+'@wp.pl'),
+        (random_string_generator(chars=forbidden), random_string_generator(chars=forbidden),
+         random_string_generator(chars=forbidden)+'@wp.pl'),
+    )
+
+    @pytest.mark.parametrize(('login', 'password'), data_with_none)
+    def test_empty_data_should_not_pass(self, login, password):
+        assert string_operations.check_correctness_of_the_data(login, password) is False
+
+    @pytest.mark.parametrize(('login', 'password', 'email'), to_long_data)
+    def test_too_long_data_should_be_not_accepted(self, login, password, email):
+        assert string_operations.check_correctness_of_the_data(login, password, email) is False
+
+    @pytest.mark.parametrize(('login', 'password', 'email'), data_with_forbidden_char)
+    def test_forbidden_char_should_return_false(self, login, password, email):
+        assert string_operations.check_correctness_of_the_data(login, password, email) is False
+
+    def test_email_address_without_at_symbol_should_be_not_accepted(self):
+        login = random_string_generator()
+        password = random_string_generator()
+        email = random_string_generator()
+        assert string_operations.check_correctness_of_the_data(login, password, email) is False
+
+    @pytest.mark.parametrize(('login', 'password', 'email'), correct_data)
+    def test_correct_data_should_return_true(self, login, password, email):
+        assert string_operations.check_correctness_of_the_data(login, password, email) is True
+
+
+class TestPrepareSrcAndAlt:
+    ...
