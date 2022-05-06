@@ -1,22 +1,26 @@
-from webscraper.scraper.scraper import get_html_dom, find_all_images, find_next_page, get_request
+from webscraper.scraper import scraper
 
 
 class ImageSource:
-    website_url = str
-    html_dom = str
-    all_images = str
+    """An object that represents the page being scrapped. Takes two arguments when creating the object.
 
-    def __init__(self, website_url: str, image_class: str):
+    Args:
+        website_url: string containing url of scraped website
+        image_class: class of the images in the HTML DOM."""
+    def __init__(self, website_url: str, image_class: str, pagination_class: str):
         self.website_url = website_url
         self.image_class = image_class
-        self.html_dom = get_html_dom(self.website_url)
-        self.all_images = find_all_images(self.html_dom, ('img.' + self.image_class))
+        self.pagination_class = pagination_class
+        self.html_dom = scraper.get_html_dom(self.website_url)
+        self.all_images = scraper.find_all_images(self.html_dom, ('img.' + self.image_class))
 
     def go_next_page(self):
-        self.website_url = find_next_page(self.html_dom, self.website_url)
-        self.html_dom = get_html_dom(self.website_url)
-        self.all_images = find_all_images(self.html_dom, ('img.' + self.image_class))
+        """The ImageSource object changes into the next subpage of the website."""
+        self.website_url = scraper.find_next_page(self.html_dom, self.website_url, self.pagination_class)
+        self.html_dom = scraper.get_html_dom(self.website_url)
+        self.all_images = scraper.find_all_images(self.html_dom, ('img.' + self.image_class))
 
     @staticmethod
-    def get_requests(images_source):
-        return [get_request(src) for src in images_source]
+    def get_requests(images_source) -> list:
+        """Changes the list of image sources into request objects."""
+        return [scraper.get_request(src) for src in images_source]

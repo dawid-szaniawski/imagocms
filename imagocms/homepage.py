@@ -11,14 +11,12 @@ bp = Blueprint('homepage', __name__)
 @bp.route('/author:<author_name>')
 @bp.route('/author:<author_name>/<int:page>')
 def index(page: int = 1, author_name: str = None):
-    """
-    Route for the home page. It can take two optional arguments.
+    """Route for the home page. It can take two optional arguments.
     Shows the newest post with its title, description, image, and the number of comments.
 
     Args:
         page = int. On one page we show 10 post.
-        author_name = str. Show only post from that author.
-    """
+        author_name = str. Show only post from that author."""
     db = get_db()
 
     if author_name:
@@ -59,12 +57,10 @@ def index(page: int = 1, author_name: str = None):
 
 @bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
 def image_page(img_id: int):
-    """
-    Route for single post page. It takes one argument and shows the post and all the comments related to the post.
+    """Route for single post page. It takes one argument and shows the post and all the comments related to the post.
 
     Args:
-        img_id: int. Unique ID number from the database.
-    """
+        img_id: int. Unique ID number from the database."""
     if request.method == 'POST':
         body = request.form['comment']
         error = None

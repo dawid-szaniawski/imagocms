@@ -1,14 +1,14 @@
 <div class="heading">
-<div class="logo"><a href="{{ url_for('homepage.index') }}">
-    <img src="{{ url_for('static', filename='logotype_213x64.webp') }}" width="213" height="64"></a></div>
+<div class="logo"><a href="{{ url_for('homepage.index') }}" title="Strona główna | ImagoCMS">
+    <img src="{{ url_for('static', filename='logotype_213x64.webp') }}" width="213" height="64" alt="Przejdź na stronę główną | ImagoCMS"></a></div>
 <div class="nav">
     {% if g.user %}
     <span class="nav-link" style="color: #f60;">{{ g.user['username'] }}</span>
-    <a href="{{ url_for('auth.logout') }}" class="nav-link">Wyloguj się</a>
-    <a href="{{ url_for('create.create') }}" class="nav-link add-new">Dodaj</a>
+    <a href="{{ url_for('auth.logout') }}" title="Wyloguj się" class="nav-link">Wyloguj się</a>
+    <a href="{{ url_for('create.create') }}" title="Dodaj nowy post" class="nav-link add-new">Dodaj</a>
     {% else %}
-    <a href="{{ url_for('auth.register') }}" class="nav-link">Zarejestruj się</a>
-    <a href="{{ url_for('auth.login') }}" class="nav-link">Zaloguj się</a>
+    <a href="{{ url_for('auth.register') }}" title="Zarejestruj się" class="nav-link">Zarejestruj się</a>
+    <a href="{{ url_for('auth.login') }}" title="Zaloguj się" class="nav-link">Zaloguj się</a>
     {% endif %}
 </div>
 </div>
