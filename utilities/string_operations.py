@@ -31,7 +31,7 @@ def check_correctness_of_the_data(user_login: str, user_password: str, user_emai
             return False
 
     if user_email != '':
-        if not user_email.count('@') == 1:
+        if user_email.count('@') != 1:
             return False
 
     return True
