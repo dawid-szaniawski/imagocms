@@ -38,5 +38,8 @@ def check_correctness_of_the_data(user_login: str, user_password: str, user_emai
 
 
 def prepare_src_and_alt(images_data: ResultSet) -> dict:
-    """A method that extracts the source of the image and its alt from the ResultSet object."""
+    """A method that extracts the source of the image and its alt from the ResultSet object.
+
+    Args:
+        images_data: bs4.element.ResultSet. Subclass of list with HTML IMG objects."""
     return {image['src']: image['alt'] for image in images_data}
