@@ -3,13 +3,13 @@ from werkzeug.exceptions import abort
 
 from imagocms.db import get_db
 
-bp = Blueprint('homepage', __name__)
+bp = Blueprint("homepage", __name__)
 
 
-@bp.route('/')
-@bp.route('/<int:page>')
-@bp.route('/author:<author_name>')
-@bp.route('/author:<author_name>/<int:page>')
+@bp.route("/")
+@bp.route("/<int:page>")
+@bp.route("/author:<author_name>")
+@bp.route("/author:<author_name>/<int:page>")
 def index(page: int = 1, author_name: str = None):
     """Route for the home page. It can take two optional arguments.
     Shows the newest post with its title, description, image, and the number of comments.
@@ -29,7 +29,10 @@ def index(page: int = 1, author_name: str = None):
         GROUP BY i.id
         ORDER BY i.created DESC
         LIMIT 11 OFFSET ?"""
-        to_execute_variables = (author_name, (page * 10) - 10,)
+        to_execute_variables = (
+            author_name,
+            (page * 10) - 10,
+        )
     else:
         to_execute_command = """
         SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
@@ -50,35 +53,44 @@ def index(page: int = 1, author_name: str = None):
     if not next_page_data:
         next_page = None
     else:
-        next_page = page+1
+        next_page = page + 1
 
-    return render_template('homepage/index.html', images=images, page=page, next_page=next_page, author=author_name)
+    return render_template(
+        "homepage/index.html",
+        images=images,
+        page=page,
+        next_page=next_page,
+        author=author_name,
+    )
 
 
-@bp.route('/img/<int:img_id>', methods=('GET', 'POST'))
+@bp.route("/img/<int:img_id>", methods=("GET", "POST"))
 def image_page(img_id: int):
     """Route for single post page. It takes one argument and shows the post and all the comments related to the post.
 
     Args:
         img_id: int. Unique ID number from the database."""
-    if request.method == 'POST':
-        body = request.form['comment']
+    if request.method == "POST":
+        body = request.form["comment"]
         error = None
 
         if not body:
-            error = 'Treść komentarza nie może być pusta'
+            error = "Treść komentarza nie może być pusta"
 
         if error is None:
             db = get_db()
             db.execute(
-                'INSERT INTO comments (author_id, image_id, body) VALUES (?, ?, ?)',
-                (g.user['id'], img_id, body)
+                "INSERT INTO comments (author_id, image_id, body) VALUES (?, ?, ?)",
+                (g.user["id"], img_id, body),
             )
             db.commit()
             return redirect(request.url)
         flash(error)
 
-    image_page_data = get_db().execute("""
+    image_page_data = (
+        get_db()
+        .execute(
+            """
     SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created, img_u.username AS img_author,
     c.body, c.created AS c_created, u.username AS c_author, counter.c_count
     FROM images i
@@ -86,6 +98,10 @@ def image_page(img_id: int):
     LEFT JOIN comments c ON i.id = c.image_id
     LEFT JOIN user u ON c.author_id = u.id
     CROSS JOIN (SELECT COUNT(*) AS c_count FROM comments c2 WHERE c2.image_id = ?) counter
-    WHERE i.id = ? ORDER BY c_created DESC""", (img_id, img_id)).fetchall()
+    WHERE i.id = ? ORDER BY c_created DESC""",
+            (img_id, img_id),
+        )
+        .fetchall()
+    )
 
-    return render_template('homepage/image_page.html', image_page_data=image_page_data)
+    return render_template("homepage/image_page.html", image_page_data=image_page_data)

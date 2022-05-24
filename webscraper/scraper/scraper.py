@@ -11,7 +11,7 @@ def get_html_dom(website_url: str) -> BeautifulSoup:
     Returns:
         BeautifulSoup object containing HTML DOM."""
     request = get(website_url)
-    return BeautifulSoup(request.text, 'html.parser')
+    return BeautifulSoup(request.text, "html.parser")
 
 
 def find_all_images(html_dom: BeautifulSoup, img_class: str) -> ResultSet:
@@ -26,7 +26,9 @@ def find_all_images(html_dom: BeautifulSoup, img_class: str) -> ResultSet:
     return html_dom.select(img_class)
 
 
-def find_next_page(html_dom: BeautifulSoup, website_url: str, pagination_class: str) -> str:
+def find_next_page(
+    html_dom: BeautifulSoup, website_url: str, pagination_class: str
+) -> str:
     """Search the HTML DOM for the next page URL address.
 
     Args:
@@ -36,9 +38,9 @@ def find_next_page(html_dom: BeautifulSoup, website_url: str, pagination_class: 
 
     Returns:
         the URL address of the next page"""
-    next_url = html_dom.find(class_=pagination_class).find('a')['href']
+    next_url = html_dom.find(class_=pagination_class).find("a")["href"]
     if len(next_url) < 2 or next_url == website_url:
-        next_url = html_dom.find(class_=pagination_class).find_all('a')[2]['href']
+        next_url = html_dom.find(class_=pagination_class).find_all("a")[2]["href"]
     return next_url
 
 
