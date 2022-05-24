@@ -22,10 +22,16 @@ def start_sync(websites_data: list, pages: int = 1) -> list:
     to_return = []
     for website in websites_data:
         additional_pages = pages
-        if 'pagination_class' in website:
-            site = ImageSource(website['website_url'], website['image_class'], website['pagination_class'])
+        if "pagination_class" in website:
+            site = ImageSource(
+                website["website_url"],
+                website["image_class"],
+                website["pagination_class"],
+            )
         else:
-            site = ImageSource(website['website_url'], website['image_class'], 'pagination')
+            site = ImageSource(
+                website["website_url"], website["image_class"], "pagination"
+            )
 
         site_src_and_alt = prepare_src_and_alt(site.all_images)
         site_names = [change_name(file_src) for file_src in site_src_and_alt.keys()]
@@ -33,8 +39,11 @@ def start_sync(websites_data: list, pages: int = 1) -> list:
         download_images(dict(zip(site_names, site_requests)))
 
         to_return.extend(
-            [(website['website_user_id'], filename, title)
-             for filename, title in zip(site_names, site_src_and_alt.values())])
+            [
+                (website["website_user_id"], filename, title)
+                for filename, title in zip(site_names, site_src_and_alt.values())
+            ]
+        )
 
         while additional_pages > 1:
             site.go_next_page()
@@ -44,8 +53,11 @@ def start_sync(websites_data: list, pages: int = 1) -> list:
             download_images(dict(zip(site_names, site_requests)))
 
             to_return.extend(
-                [(website['website_user_id'], filename, title)
-                 for filename, title in zip(site_names, site_src_and_alt.values())])
+                [
+                    (website["website_user_id"], filename, title)
+                    for filename, title in zip(site_names, site_src_and_alt.values())
+                ]
+            )
             additional_pages -= 1
 
     return to_return

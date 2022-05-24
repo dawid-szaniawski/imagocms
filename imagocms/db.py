@@ -4,10 +4,9 @@ from webscraper import start_sync
 
 
 def get_db():
-    if 'db' not in g:
+    if "db" not in g:
         g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
+            current_app.config["DATABASE"], detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
     return g.db
@@ -18,7 +17,7 @@ def close_db(e=None):
 
     Args:
         e: refers to the error object. None by default."""
-    db = g.pop('db', None)
+    db = g.pop("db", None)
 
     if db is not None:
         db.close()
@@ -28,7 +27,7 @@ def init_db(app):
     """Initiates database and execute instructions from schema.sql file."""
     with app.app_context():
         db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
+        with app.open_resource("schema.sql", mode="r") as f:
             db.executescript(f.read())
 
 
@@ -37,22 +36,20 @@ def prepare_images(app):
     It starts only when there is no data in images table."""
     with app.app_context():
         db = get_db()
-        with app.open_resource('init_data.sql', mode='r') as file:
+        with app.open_resource("init_data.sql", mode="r") as file:
             db.executescript(file.read())
         db = get_db()
-        test = db.execute(
-            'SELECT id FROM images'
-        ).fetchone()
+        test = db.execute("SELECT id FROM images").fetchone()
 
         if not test:
             websites_data = db.execute(
-                'SELECT website_user_id, website_url, image_class, pagination_class FROM ext_websites'
+                "SELECT website_user_id, website_url, image_class, pagination_class FROM ext_websites"
             ).fetchall()
             sync_data = start_sync(websites_data)
             for i in sync_data:
                 db.execute(
-                    'INSERT INTO images (author_id, filename, title, accepted) VALUES (?, ?, ?, 1)',
-                    (i[0], i[1], i[2])
+                    "INSERT INTO images (author_id, filename, title, accepted) VALUES (?, ?, ?, 1)",
+                    (i[0], i[1], i[2]),
                 )
                 db.commit()
 

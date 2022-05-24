@@ -15,13 +15,16 @@ def allowed_file(allowed_extensions: set, file: FileStorage) -> bool:
     allowed_extensions = allowed_extensions
     if not imghdr.what(file) in allowed_extensions:
         return False
-    return '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions
+    return (
+        "." in file.filename
+        and file.filename.rsplit(".", 1)[1].lower() in allowed_extensions
+    )
 
 
 def upload_image(file: FileStorage) -> str:
     """Method used to save file in server. Returns filename."""
     filename = secure_filename(change_name(file.filename))
-    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
     return filename
 
 
@@ -32,5 +35,7 @@ def download_images(file_name_and_request_object: dict) -> None:
         file_name_and_request_object: a dictionary containing the name of the file and the request object of the file we
          want to download."""
     for file_name, file_src in file_name_and_request_object.items():
-        with open(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name), 'wb') as file:
+        with open(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], file_name), "wb"
+        ) as file:
             file.write(file_src.content)
