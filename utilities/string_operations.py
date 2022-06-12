@@ -25,7 +25,7 @@ def check_correctness_of_the_data(
         return False
     if user_login == "" or user_password == "":
         return False
-    if len(user_login) > 15 or len(user_password) > 256 or len(user_email) > 320:
+    if len(user_login) > 15 or len(user_password) > 24 or len(user_email) > 64:
         return False
 
     for i in forbidden_chars:
