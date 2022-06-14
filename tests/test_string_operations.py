@@ -1,7 +1,6 @@
 from utilities import string_operations
 
 from unittest.mock import patch
-from pathlib import Path
 
 import pytest
 
@@ -59,61 +58,49 @@ class TestCheckCorrectnessOfTheData:
 
     @pytest.mark.parametrize(("login", "password"), data_with_none)
     def test_empty_data_should_not_pass(self, login, password):
-        assert string_operations.check_correctness_of_the_data(login, password) is False
+        assert string_operations.is_data_correct(login, password) is False
 
     @pytest.mark.parametrize(("login", "password", "email"), too_long_data)
     def test_too_long_data_should_be_not_accepted(self, login, password, email):
-        assert (
-            string_operations.check_correctness_of_the_data(login, password, email)
-            is False
-        )
+        assert string_operations.is_data_correct(login, password, email) is False
 
     @pytest.mark.parametrize(("login", "password"), correct_login_and_password)
     def test_email_address_without_at_symbol_should_be_not_accepted(
         self, login, password
     ):
         email = "test_email"
-        assert (
-            string_operations.check_correctness_of_the_data(login, password, email)
-            is False
-        )
+        assert string_operations.is_data_correct(login, password, email) is False
 
     @pytest.mark.parametrize(("login", "password"), correct_login_and_password)
     def test_email_address_with_more_than_one_at_symbol_should_be_not_accepted(
         self, login, password
     ):
         email = "test_email@wp@wp.pl"
-        assert (
-            string_operations.check_correctness_of_the_data(login, password, email)
-            is False
-        )
+        assert string_operations.is_data_correct(login, password, email) is False
 
     @pytest.mark.parametrize(("login", "password", "email"), data_with_forbidden_char)
     def test_data_with_forbidden_char_should_be_not_accepted(
         self, login, password, email
     ):
-        assert (
-            string_operations.check_correctness_of_the_data(login, password, email)
-            is False
-        )
+        assert string_operations.is_data_correct(login, password, email) is False
 
     @pytest.mark.parametrize(("login", "password"), correct_login_and_password)
     def test_email_address_is_no_needed_to_pass(self, login, password):
-        assert string_operations.check_correctness_of_the_data(login, password) is True
+        assert string_operations.is_data_correct(login, password) is True
 
     @pytest.mark.parametrize(("login", "password"), correct_login_and_password)
     def test_correct_data_with_email_should_return_true(self, login, password):
         email = "test@test.pl"
-        assert (
-            string_operations.check_correctness_of_the_data(login, password, email)
-            is True
-        )
+        assert string_operations.is_data_correct(login, password, email) is True
 
 
 class TestPrepareSrcAndAlt:
     @pytest.fixture()
     def prepare_ResultSet(self, example_website):
-        yield example_website.select("img.full-image")
+        """Prepares ResultSet object based on BeautifulSoup object.
+
+        Returns: ResultSet object."""
+        return example_website.select("img.full-image")
 
     def test_output_data_should_be_a_dict(self, prepare_ResultSet):
         assert isinstance(

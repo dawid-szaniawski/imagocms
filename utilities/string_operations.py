@@ -14,9 +14,7 @@ def change_name(file_name: str) -> str:
     return str(uuid.uuid4()) + "." + file_name.rsplit(".", 1)[1].lower()
 
 
-def check_correctness_of_the_data(
-    user_login: str, user_password: str, user_email: str = ""
-) -> bool:
+def is_data_correct(user_login: str, user_password: str, user_email: str = "") -> bool:
     """Checks if the user has entered login, password, and email address (optional).
     Additionally, it verifies that they are of the correct length and that they do not contain forbidden characters."""
     forbidden_chars = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'

@@ -33,6 +33,5 @@ CREATE TABLE IF NOT EXISTS ext_websites (
     website_user_id TEXT NOT NULL UNIQUE,
     website_url TEXT NOT NULL UNIQUE,
     image_class TEXT NOT NULL,
-    pagination_class TEXT,
     FOREIGN KEY (website_user_id) REFERENCES user (id) ON DELETE CASCADE
 );
