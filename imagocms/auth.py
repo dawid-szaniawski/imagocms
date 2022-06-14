@@ -13,7 +13,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from imagocms.db import get_db
-from utilities.string_operations import check_correctness_of_the_data
+from utilities.string_operations import is_data_correct
 
 
 bp = Blueprint("auth", __name__, url_prefix="/login")
@@ -26,7 +26,7 @@ def login():
         password = request.form["password"]
         error = None
 
-        if not check_correctness_of_the_data(username, password):
+        if not is_data_correct(username, password):
             error = "Wprowadzone dane są nieprawidłowe."
 
         db = get_db()
@@ -57,7 +57,7 @@ def register():
         email = request.form["email"]
         error = None
 
-        if not check_correctness_of_the_data(username, password, email):
+        if not is_data_correct(username, password, email):
             error = "Wprowadzone dane są nieprawidłowe."
         elif email == "":
             email = None

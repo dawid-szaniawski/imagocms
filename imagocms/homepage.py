@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, g, redirect, render_template, request
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from werkzeug.exceptions import abort
 
 from imagocms.db import get_db
@@ -8,58 +8,80 @@ bp = Blueprint("homepage", __name__)
 
 @bp.route("/")
 @bp.route("/<int:page>")
+def index(page: int = 1):
+    """Route for the home page. It can take optional argument.
+    Shows the newest post with its title, description, image, and the number of comments.
+
+    Args:
+        page = int. On one page we show 10 post."""
+    db = get_db()
+
+    to_execute_command = """
+    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
+    FROM images i
+    LEFT JOIN user u ON i.author_id = u.id
+    LEFT JOIN comments c ON i.id = c.image_id
+    GROUP BY i.id
+    ORDER BY i.created DESC
+    LIMIT 11 OFFSET ?"""
+    to_execute_variables = ((page * 10) - 10,)
+
+    images_data = db.execute(to_execute_command, to_execute_variables).fetchall()
+    images = images_data[:10]
+
+    if not images and page == 1:
+        from imagocms.demo_data_maker import prepare_images_from_external_websites
+
+        prepare_images_from_external_websites()
+        return redirect(url_for("index"))
+
+    if not images and page != 1:
+        abort(404)
+
+    return render_template(
+        "homepage/index.html",
+        images=images,
+        page=page,
+        next_page=set_next_page(images_data[10:], page),
+    )
+
+
 @bp.route("/author:<author_name>")
 @bp.route("/author:<author_name>/<int:page>")
-def index(page: int = 1, author_name: str = None):
-    """Route for the home page. It can take two optional arguments.
-    Shows the newest post with its title, description, image, and the number of comments.
+def author_index(page: int = 1, author_name: str = None):
+    """Route for the author page. It can take two optional arguments.
+    Shows the newest author post with its title, description, image, and the number of comments.
 
     Args:
         page = int. On one page we show 10 post.
         author_name = str. Show only post from that author."""
     db = get_db()
 
-    if author_name:
-        to_execute_command = """
-        SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
-        FROM images i
-        LEFT JOIN user u ON i.author_id = u.id
-        LEFT JOIN comments c ON i.id = c.image_id
-        WHERE u.username = ?
-        GROUP BY i.id
-        ORDER BY i.created DESC
-        LIMIT 11 OFFSET ?"""
-        to_execute_variables = (
-            author_name,
-            (page * 10) - 10,
-        )
-    else:
-        to_execute_command = """
-        SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
-        FROM images i
-        LEFT JOIN user u ON i.author_id = u.id
-        LEFT JOIN comments c ON i.id = c.image_id
-        GROUP BY i.id
-        ORDER BY i.created DESC
-        LIMIT 11 OFFSET ?"""
-        to_execute_variables = ((page * 10) - 10,)
+    to_execute_command = """
+    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
+    FROM images i
+    LEFT JOIN user u ON i.author_id = u.id
+    LEFT JOIN comments c ON i.id = c.image_id
+    WHERE u.username = ?
+    GROUP BY i.id
+    ORDER BY i.created DESC
+    LIMIT 11 OFFSET ?"""
+    to_execute_variables = (
+        author_name,
+        (page * 10) - 10,
+    )
 
     images_data = db.execute(to_execute_command, to_execute_variables).fetchall()
-    images, next_page_data = images_data[:10], images_data[10:]
+    images = images_data[:10]
 
     if not images and page != 1:
         abort(404)
 
-    if not next_page_data:
-        next_page = None
-    else:
-        next_page = page + 1
-
     return render_template(
-        "homepage/index.html",
+        "homepage/author_index.html",
         images=images,
         page=page,
-        next_page=next_page,
+        next_page=set_next_page(images_data[10:], page),
         author=author_name,
     )
 
@@ -105,3 +127,11 @@ def image_page(img_id: int):
     )
 
     return render_template("homepage/image_page.html", image_page_data=image_page_data)
+
+
+def set_next_page(next_page_data: list, page: int) -> int | None:
+    """If is any data in next_page_data it increases page by one. If next_page_data is empty, returns None."""
+    if not next_page_data:
+        return None
+    else:
+        return page + 1

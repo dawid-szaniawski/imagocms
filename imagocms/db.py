@@ -1,6 +1,5 @@
 import sqlite3
 from flask import current_app, g
-from webscraper import start_sync
 
 
 def get_db():
@@ -31,31 +30,16 @@ def init_db(app):
             db.executescript(f.read())
 
 
-def prepare_images(app):
-    """Method to start WebScraper, a tool that prepares demo data.
-    It starts only when there is no data in images table."""
+def add_demo_users_and_external_websites(app):
+    """Function only for testing purpose. It's adding a demo users and external websites to download demo data."""
     with app.app_context():
         db = get_db()
         with app.open_resource("init_data.sql", mode="r") as file:
             db.executescript(file.read())
-        db = get_db()
-        test = db.execute("SELECT id FROM images").fetchone()
-
-        if not test:
-            websites_data = db.execute(
-                "SELECT website_user_id, website_url, image_class, pagination_class FROM ext_websites"
-            ).fetchall()
-            sync_data = start_sync(websites_data)
-            for i in sync_data:
-                db.execute(
-                    "INSERT INTO images (author_id, filename, title, accepted) VALUES (?, ?, ?, 1)",
-                    (i[0], i[1], i[2]),
-                )
-                db.commit()
 
 
 def init_app(app):
     """Register close_db, use init_db and prepare_images method."""
     app.teardown_appcontext(close_db)
     init_db(app)
-    prepare_images(app)
+    add_demo_users_and_external_websites(app)

@@ -5,8 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt .
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 ENTRYPOINT ["python", "manage.py"]

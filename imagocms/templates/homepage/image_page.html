@@ -7,7 +7,7 @@
         <h2 class="image-title">{{ image_page_data[0]['title'] }}</h2>
         <div class="image-details">
         <p class="author-and-data">
-            <a href="{{ url_for('homepage.index', page=1, author_name=image_page_data[0]['img_author']) }}" title="Sprawdź inne posty autora {{ image_page_data[0]['img_author'] }}" class="username">
+            <a href="{{ url_for('homepage.author_index', page=1, author_name=image_page_data[0]['img_author']) }}" title="Sprawdź inne posty autora {{ image_page_data[0]['img_author'] }}" class="username">
                 {{ image_page_data[0]['img_author'] }}</a>
             {{ image_page_data[0]['img_created'].strftime('%Y-%m-%d') }}</p>
 
@@ -54,7 +54,7 @@
     {% if image_page_data[0]['body'] %}
         {% for comment in image_page_data %}
         <div class="comment">
-            <p><a href="{{ url_for('homepage.index', page=1, author_name=comment['c_author']) }}" title="Sprawdź inne posty {{ comment['c_author'] }}" class="username">
+            <p><a href="{{ url_for('homepage.author_index', page=1, author_name=comment['c_author']) }}" title="Sprawdź inne posty {{ comment['c_author'] }}" class="username">
                     {{ comment['c_author'] }}</a>
                 <span style="font-size: 1.4rem;">{{ comment['c_created'].strftime('%Y-%m-%d') }}</span></p>
             <p class="body">{{ comment['body'] }}</p>

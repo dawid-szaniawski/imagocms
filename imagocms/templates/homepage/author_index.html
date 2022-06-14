@@ -42,7 +42,7 @@
 <div class="pagination">
     {% if next_page %}
     <div class="pagination-button">
-        <a href="{{ url_for('homepage.index', page=next_page) }}" title="Następna strona" class="pagination-a">Następna strona</a>
+        <a href="{{ url_for('homepage.author_index', page=next_page, author_name=author) }}" title="Następna strona" class="pagination-a">Następna strona</a>
     </div>
     {% endif %}
 </div>

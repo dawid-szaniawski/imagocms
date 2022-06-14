@@ -40,7 +40,12 @@ def find_next_page(
         the URL address of the next page"""
     next_url = html_dom.find(class_=pagination_class).find("a")["href"]
     if len(next_url) < 2 or next_url == website_url:
-        next_url = html_dom.find(class_=pagination_class).find_all("a")[2]["href"]
+        next_url_index = 2
+        while len(next_url) < 2 or next_url == website_url:
+            next_url = html_dom.find(class_=pagination_class).find_all("a")[
+                next_url_index
+            ]["href"]
+            next_url_index += 1
     return next_url
 
 
