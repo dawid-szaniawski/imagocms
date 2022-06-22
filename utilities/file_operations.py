@@ -30,7 +30,6 @@ def upload_image(file: FileStorage) -> str:
 
 def download_images(file_name_and_request_object: dict) -> None:
     """Method used to download image to server from another place.
-
     Args:
         file_name_and_request_object: a dictionary containing the name of the file and the request object of the file we
          want to download."""
