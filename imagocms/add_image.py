@@ -44,7 +44,7 @@ def create():
         if error is None:
             db = get_db()
             if file:
-                filename = upload_image(file)
+                filename = upload_image(file, current_app.config["UPLOAD_FOLDER"])
             else:
                 filename = None
             db.execute(
