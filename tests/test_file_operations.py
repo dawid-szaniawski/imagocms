@@ -1,63 +1,142 @@
-from utilities import file_operations
+import io
+from pathlib import Path
+from typing import IO
+from requests import get
 
-from unittest.mock import patch
+from utilities import file_operations
 
 import pytest
 
 
-class TestAllowedFile:
-    allowed_extensions = {"jpeg", "png"}
-    correct_files = ["correct01.jpeg", "correct02.png"]
-    incorrect_files = ["incorrect01.jpg.sql", "incorrect02.pdf", "incorrect03.jpg"]
+@pytest.fixture(scope="function")
+def prepare_bytesio_and_filename(request) -> IO[bytes]:
+    """Takes the name of a file and looks for that file in a folder with sample data.
+    Then creates a file-like object and pass it back.
 
-    @patch("imghdr.what")
-    @pytest.mark.parametrize("make_FileStorage", ["correct01.jpeg"], indirect=True)
-    def test_imghdr_module_should_be_called(self, imghdr_mock, make_FileStorage):
-        imghdr_mock.return_value = "jpeg"
-        file_operations.allowed_file(
-            self.__class__.allowed_extensions, make_FileStorage
-        )
-        imghdr_mock.assert_called_once()
+    Args:
+        request: filename
 
-    @pytest.mark.parametrize("make_FileStorage", correct_files, indirect=True)
-    def test_return_true_if_extension_is_correct(self, make_FileStorage):
+    Returns:
+        BytesIO: file-like object.
+    """
+    filename = request.param
+    file_path = Path(__file__) / f"../fixtures/example_data/example_images/{filename}"
+    with open(file_path, "rb") as f:
+        yield io.BytesIO(f.read()), filename
+
+
+@pytest.fixture(scope="function")
+def prepare_request_object(request):
+    return get(request.param)
+
+
+class TestIsValidImage:
+    allowed_extensions = {"JPEG", "PNG", "GIF"}
+    correct_files = ("correct01.jpeg", "correct02.png")
+    not_a_valid_image = ("incorrect01.jpg",)
+    wrong_extension_in_name = ("incorrect02.pdf",)
+    different_extensions = ("incorrect03.jpg",)
+    wrong_extension_in_bytes = ("incorrect04.jpg",)
+    to_much_extensions = ("incorrect05.sql.jpg",)
+
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", correct_files, indirect=True
+    )
+    def test_return_true_if_image_is_valid(self, prepare_bytesio_and_filename):
+        bytesio, filename = prepare_bytesio_and_filename
+
         assert (
-            file_operations.allowed_file(
-                self.__class__.allowed_extensions, make_FileStorage
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
             )
             is True
         )
 
-    @pytest.mark.parametrize("make_FileStorage", incorrect_files, indirect=True)
-    def test_return_false_if_extension_is_incorrect(self, make_FileStorage):
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", not_a_valid_image, indirect=True
+    )
+    def test_return_false_if_file_is_not_a_valid_image(
+        self, prepare_bytesio_and_filename
+    ):
+        bytesio, filename = prepare_bytesio_and_filename
+
         assert (
-            file_operations.allowed_file(
-                self.__class__.allowed_extensions, make_FileStorage
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
+            )
+            is False
+        )
+
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", wrong_extension_in_name, indirect=True
+    )
+    def test_return_false_if_extension_from_name_is_not_in_allowed_extensions(
+        self, prepare_bytesio_and_filename
+    ):
+        bytesio, filename = prepare_bytesio_and_filename
+
+        assert (
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
+            )
+            is False
+        )
+
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", different_extensions, indirect=True
+    )
+    def test_return_false_if_extension_from_name_is_not_extension_from_bytes(
+        self, prepare_bytesio_and_filename
+    ):
+        bytesio, filename = prepare_bytesio_and_filename
+
+        assert (
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
+            )
+            is False
+        )
+
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", wrong_extension_in_bytes, indirect=True
+    )
+    def test_return_false_if_extension_from_bytes_is_not_in_allowed_extensions(
+        self, prepare_bytesio_and_filename
+    ):
+        bytesio, filename = prepare_bytesio_and_filename
+
+        assert (
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
+            )
+            is False
+        )
+
+    @pytest.mark.parametrize(
+        "prepare_bytesio_and_filename", to_much_extensions, indirect=True
+    )
+    def test_return_false_if_file_had_more_than_one_extension(
+        self, prepare_bytesio_and_filename
+    ):
+        bytesio, filename = prepare_bytesio_and_filename
+
+        assert (
+            file_operations.is_valid_image(
+                self.__class__.allowed_extensions, bytesio, filename
             )
             is False
         )
 
 
-class TestUploadFile:
-    def test_secure_filename_should_be_called(self):
-        ...
-
-    def test_change_name_should_be_called(self):
-        ...
-
-    def test_os_save_should_be_called(self):
-        ...
-
-    def test_os_path_join_should_be_called(self):
-        ...
-
-    def test_filename_should_be_return(self):
-        ...
-
-
 class TestDownloadImages:
-    def test_os_path_join_should_be_called(self):
-        ...
+    url = ("https://pl.wikipedia.org/static/images/project-logos/plwiki.png",)
 
-    def test_write_should_be_called(self):
-        ...
+    @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
+    def test_file_should_have_proper_filename_and_be_in_correct_place(
+        self, tmp_path_factory, prepare_request_object
+    ):
+        data_dict = {"filename.png": prepare_request_object}
+        temp_folder = tmp_path_factory.mktemp("data")
+        file_operations.download_images(data_dict, temp_folder)
+        path = Path(temp_folder / "filename.png")
+        assert path.exists() is True
