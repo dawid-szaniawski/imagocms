@@ -32,6 +32,8 @@ def is_valid_image(allowed_extensions: set, file: IO[bytes], filename: str) -> b
         return False
 
     if extension_from_name != extension_from_bytes:
+        if extension_from_name == "JPG" and extension_from_bytes == "JPEG":
+            return True
         return False
 
     return True
