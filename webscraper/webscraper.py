@@ -3,9 +3,10 @@ Scans websites for images, then downloads the images to disk and returns informa
 from webscraper.scraper.scraped_site import ImageSource
 from utilities.string_operations import prepare_src_and_alt, change_name
 from utilities.file_operations import download_images
+from pathlib import Path
 
 
-def start_sync(upload_folder, websites_data: list, pages: int = 2) -> list:
+def start_sync(upload_folder: Path, websites_data: list, pages: int = 2) -> list:
     """The function that starts the synchronization process.
     Takes one argument on the basis of which it scans sites and gets the appropriate graphics.
 

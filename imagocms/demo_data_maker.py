@@ -1,9 +1,11 @@
 """Prepares demo data."""
+from pathlib import Path
+
 from imagocms.db import get_db
 from webscraper.webscraper import start_sync
 
 
-def prepare_images_from_external_websites(upload_folder) -> None:
+def prepare_images_from_external_websites(upload_folder: Path) -> None:
     """Starts WebScraper, a tool that prepares demo data based on external websites.
 
     Args:
