@@ -29,7 +29,6 @@ class TestChangeName:
 
 
 class TestCheckCorrectnessOfTheData:
-    forbidden = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
     data_with_none = (
         (None, None),
         ("login", None),

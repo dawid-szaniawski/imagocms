@@ -12,7 +12,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, "imago.sqlite"),
         UPLOAD_FOLDER=os.path.join(app.static_folder, "images"),
         MAX_CONTENT_LENGTH=2 * 1000 * 1000,
-        ALLOWED_EXTENSIONS={"png", "jpg", "jpeg", "gif"},
+        ALLOWED_EXTENSIONS={"PNG", "JPG", "JPEG", "GIF", "WEBP"},
     )
 
     if test_config is None:

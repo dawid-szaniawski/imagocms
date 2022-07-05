@@ -1,41 +1,48 @@
 import os
+from pathlib import Path
+from typing import IO
 
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
-from flask import current_app
-
-import imghdr
-
-from utilities.string_operations import change_name
+from PIL import Image
 
 
-def allowed_file(allowed_extensions: set, file: FileStorage) -> bool:
+def is_valid_image(allowed_extensions: set, file: IO[bytes], filename: str) -> bool:
     """Checks if the uploaded file has an extension accepted by the application.
-    The set of extensions should be passed as the first argument."""
-    allowed_extensions = allowed_extensions
-    if not imghdr.what(file) in allowed_extensions:
-        return False
-    return (
-        "." in file.filename
-        and file.filename.rsplit(".", 1)[1].lower() in allowed_extensions
-    )
-
-
-def upload_image(file: FileStorage) -> str:
-    """Method used to save file in server. Returns filename."""
-    filename = secure_filename(change_name(file.filename))
-    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
-    return filename
-
-
-def download_images(file_name_and_request_object: dict) -> None:
-    """Method used to download image to server from another place.
-
     Args:
+        allowed_extensions: set with allowed extensions.
+        file: file-like object containing the encoded image.
+        filename: string containing full filename."""
+    allowed_extensions = allowed_extensions
+    extension_from_name = filename.rsplit(".")
+
+    if len(extension_from_name) > 2:
+        return False
+    else:
+        extension_from_name = extension_from_name[1].upper()
+
+    if extension_from_name not in allowed_extensions:
+        return False
+
+    try:
+        with Image.open(file) as image:
+            extension_from_bytes = image.format
+    except OSError:
+        return False
+
+    if extension_from_bytes not in allowed_extensions:
+        return False
+
+    if extension_from_name != extension_from_bytes:
+        return False
+
+    return True
+
+
+def download_images(file_name_and_request_object: dict, upload_folder: Path) -> None:
+    """Method used to download image to server from another place.
+    Args:
+        upload_folder: path where the file should be saved.
         file_name_and_request_object: a dictionary containing the name of the file and the request object of the file we
          want to download."""
     for file_name, file_src in file_name_and_request_object.items():
-        with open(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], file_name), "wb"
-        ) as file:
+        with open(os.path.join(upload_folder, file_name), "wb") as file:
             file.write(file_src.content)

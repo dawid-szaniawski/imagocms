@@ -1,15 +1,18 @@
 """Website scraper tool.
 Scans websites for images, then downloads the images to disk and returns information about downloaded files."""
+from pathlib import Path
+
 from webscraper.scraper.scraped_site import ImageSource
 from utilities.string_operations import prepare_src_and_alt, change_name
 from utilities.file_operations import download_images
 
 
-def start_sync(websites_data: list, pages: int = 2) -> list:
+def start_sync(upload_folder: Path, websites_data: list, pages: int = 2) -> list:
     """The function that starts the synchronization process.
     Takes one argument on the basis of which it scans sites and gets the appropriate graphics.
 
     Args:
+        upload_folder: path where the files should be saved.
         websites_data: a list of sqlite3.Row object. It should contain minimum three columns:
             - website_url: string containing url of scraped website,
             - image_class: string containing class of the images in the HTML DOM,
@@ -33,7 +36,7 @@ def start_sync(websites_data: list, pages: int = 2) -> list:
             site_src_and_alt = prepare_src_and_alt(site.all_images)
             site_names = [change_name(file_src) for file_src in site_src_and_alt.keys()]
             site_requests = site.get_requests(site_src_and_alt.keys())
-            download_images(dict(zip(site_names, site_requests)))
+            download_images(dict(zip(site_names, site_requests)), upload_folder)
 
             to_return.extend(
                 [

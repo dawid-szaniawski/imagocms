@@ -1,6 +1,7 @@
 import uuid
 
 from bs4.element import ResultSet
+from werkzeug.utils import secure_filename
 
 
 def change_name(file_name: str) -> str:
@@ -11,7 +12,8 @@ def change_name(file_name: str) -> str:
 
     Returns:
         new filename - randomly generated uuid4+extension."""
-    return str(uuid.uuid4()) + "." + file_name.rsplit(".", 1)[1].lower()
+    new_name = str(uuid.uuid4()) + "." + file_name.rsplit(".", 1)[1].lower()
+    return secure_filename(new_name)
 
 
 def is_data_correct(user_login: str, user_password: str, user_email: str = "") -> bool:

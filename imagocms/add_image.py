@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Blueprint,
     flash,
@@ -8,9 +10,11 @@ from flask import (
     url_for,
     current_app,
 )
+
 from imagocms.db import get_db
 from imagocms.auth import login_required
-from utilities.file_operations import allowed_file, upload_image
+from utilities.file_operations import is_valid_image
+from utilities.string_operations import change_name
 
 bp = Blueprint("create", __name__, url_prefix="/create")
 
@@ -35,7 +39,8 @@ def create():
         elif not file and description == "":
             error = "Proszę załączyć plik lub uzupełnić pole Opis."
         elif file:
-            if not allowed_file(allowed_extensions, file):
+            if not is_valid_image(allowed_extensions, file.stream, file.filename):
+                file.close()
                 error = "Nieprawidłowe rozszerzenie pliku."
 
         elif error is None and description == "":
@@ -44,7 +49,10 @@ def create():
         if error is None:
             db = get_db()
             if file:
-                filename = upload_image(file)
+                file.stream.seek(0)
+                filename = change_name(file.filename)
+                file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
+                file.close()
             else:
                 filename = None
             db.execute(
