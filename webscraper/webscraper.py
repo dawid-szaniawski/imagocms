@@ -1,9 +1,10 @@
 """Website scraper tool.
 Scans websites for images, then downloads the images to disk and returns information about downloaded files."""
+from pathlib import Path
+
 from webscraper.scraper.scraped_site import ImageSource
 from utilities.string_operations import prepare_src_and_alt, change_name
 from utilities.file_operations import download_images
-from pathlib import Path
 
 
 def start_sync(upload_folder: Path, websites_data: list, pages: int = 2) -> list:
