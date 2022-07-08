@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pytest
 
 
+@pytest.mark.unittests
 class TestChangeName:
 
     filenames = (
@@ -28,6 +29,7 @@ class TestChangeName:
         assert new_filename == uuid4 + extension
 
 
+@pytest.mark.unittests
 class TestCheckCorrectnessOfTheData:
     data_with_none = (
         (None, None),
@@ -93,6 +95,7 @@ class TestCheckCorrectnessOfTheData:
         assert string_operations.is_data_correct(login, password, email) is True
 
 
+@pytest.mark.integtests
 class TestPrepareSrcAndAlt:
     @pytest.fixture()
     def prepare_ResultSet(self, example_website):
