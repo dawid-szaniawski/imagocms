@@ -34,8 +34,8 @@ def prepare_request_object(request):
 
 @pytest.mark.integtests
 class TestIsValidImage:
-    allowed_extensions = {"JPEG", "PNG", "GIF"}
-    correct_files = ("correct01.jpeg", "correct02.png")
+    allowed_extensions = {"JPG", "JPEG", "PNG", "GIF"}
+    correct_files = ("correct01.jpeg", "correct02.png", "correct03.jpg")
     not_a_valid_image = ("incorrect01.jpg",)
     wrong_extension_in_name = ("incorrect02.pdf",)
     different_extensions = ("incorrect03.jpg",)
