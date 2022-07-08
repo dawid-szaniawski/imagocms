@@ -20,7 +20,7 @@ def prepare_bytesio_and_filename(request) -> IO[bytes]:
         BytesIO: file-like object.
     """
     filename = request.param
-    file_path = Path(__file__) / f"../fixtures/example_data/example_images/{filename}"
+    file_path = Path(__file__).parent / f"../fixtures/example_data/example_images/{filename}"
     with open(file_path, "rb") as f:
         yield io.BytesIO(f.read()), filename
 
