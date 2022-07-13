@@ -36,11 +36,10 @@ def prepare_request_object(request):
 class TestIsValidImage:
     allowed_extensions = {"JPG", "JPEG", "PNG", "GIF"}
     correct_files = ("correct01.jpeg", "correct02.png", "correct03.jpg")
-    not_a_valid_image = ("incorrect01.jpg",)
+    not_a_valid_image = ("incorrect01.jpg", "incorrect05.sql.jpg")
     wrong_extension_in_name = ("incorrect02.pdf",)
     different_extensions = ("incorrect03.jpg",)
     wrong_extension_in_bytes = ("incorrect04.jpg",)
-    to_much_extensions = ("incorrect05.sql.jpg",)
 
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", correct_files, indirect=True
@@ -104,21 +103,6 @@ class TestIsValidImage:
         "prepare_bytesio_and_filename", wrong_extension_in_bytes, indirect=True
     )
     def test_return_false_if_extension_from_bytes_is_not_in_allowed_extensions(
-        self, prepare_bytesio_and_filename
-    ):
-        bytesio, filename = prepare_bytesio_and_filename
-
-        assert (
-            file_operations.is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
-            is False
-        )
-
-    @pytest.mark.parametrize(
-        "prepare_bytesio_and_filename", to_much_extensions, indirect=True
-    )
-    def test_return_false_if_file_had_more_than_one_extension(
         self, prepare_bytesio_and_filename
     ):
         bytesio, filename = prepare_bytesio_and_filename
