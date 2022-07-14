@@ -37,11 +37,12 @@ def create():
         elif len(title) > 80:
             error = "Tytuł może mieć maksymalnie 80 znaków."
         elif not file and description == "":
-            error = "Proszę załączyć plik lub uzupełnić pole Opis."
+            error = "Załącz plik lub uzupełnij pole opis."
         elif file:
             if not is_valid_image(allowed_extensions, file.stream, file.filename):
                 file.close()
-                error = "Nieprawidłowe rozszerzenie pliku."
+                extensions = ", ".join(allowed_extensions)
+                error = f"Nieprawidłowe rozszerzenie pliku. Spróbuj użyć: {extensions}"
 
         elif error is None and description == "":
             description = None

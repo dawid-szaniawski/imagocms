@@ -1,8 +1,7 @@
 from utilities import string_operations
 
-from unittest.mock import patch
-
 import pytest
+import bs4
 
 
 @pytest.mark.unittests
@@ -15,18 +14,17 @@ class TestChangeName:
         ("TEST_FILENAME.WEBP.JPEG", ".jpeg"),
     )
 
-    @patch("uuid.uuid4")
     @pytest.mark.parametrize(("file_name", "extension"), filenames)
     def test_extension_should_be_correct_and_uuid4_module_should_be_called(
-        self, uuid4_mock, file_name, extension
+        self, mocker, file_name, extension
     ):
-        uuid4 = "4d43171d-174b-4501-835b-da5abfbc49d4"
-        uuid4_mock.return_value = uuid4
+        fake_uuid4 = "4d43171d-174b-4501-835b-da5abfbc49d4"
+        uuid4_mock = mocker.patch("uuid.uuid4", return_value=fake_uuid4)
 
         new_filename = string_operations.change_name(file_name)
 
         uuid4_mock.assert_called_once()
-        assert new_filename == uuid4 + extension
+        assert new_filename == fake_uuid4 + extension
 
 
 @pytest.mark.unittests
@@ -98,21 +96,23 @@ class TestCheckCorrectnessOfTheData:
 @pytest.mark.integtests
 class TestPrepareSrcAndAlt:
     @pytest.fixture()
-    def prepare_ResultSet(self, example_website):
+    def prepare_result_set(
+        self, example_website: bs4.BeautifulSoup
+    ) -> bs4.element.ResultSet:
         """Prepares ResultSet object based on BeautifulSoup object.
 
         Returns: ResultSet object."""
         return example_website.select("img.full-image")
 
-    def test_output_data_should_be_a_dict(self, prepare_ResultSet):
+    def test_output_data_should_be_a_dict(self, prepare_result_set):
         assert isinstance(
-            string_operations.prepare_src_and_alt(prepare_ResultSet), dict
+            string_operations.prepare_src_and_alt(prepare_result_set), dict
         )
 
-    def test_output_should_have_valid_data(self, prepare_ResultSet):
+    def test_output_should_have_valid_data(self, prepare_result_set):
         valid_data = {
             "https://example-website.com/contents/1mFjN19GzihJ9K21FoNbeuZGxLZJJQ2s.jpg": "Short alt",
             "https://www.example-another-image.com.pl/contents/2022/06/normal/or_not/6gOXbkxrkHMITAOiNdDsuWu14sIMihrM."
             "jpeg": "This time alt is much longer than before. Sometimes we have to deal with it.",
         }
-        assert string_operations.prepare_src_and_alt(prepare_ResultSet) == valid_data
+        assert string_operations.prepare_src_and_alt(prepare_result_set) == valid_data

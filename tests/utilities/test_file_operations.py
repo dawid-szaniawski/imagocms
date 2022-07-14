@@ -1,15 +1,16 @@
 import io
 from pathlib import Path
 from typing import IO
-from requests import get
+import requests
 
 from utilities import file_operations
 
 import pytest
+import _pytest.fixtures
 
 
 @pytest.fixture(scope="function")
-def prepare_bytesio_and_filename(request) -> IO[bytes]:
+def prepare_bytesio_and_filename(request: _pytest.fixtures.SubRequest) -> IO[bytes]:
     """Takes the name of a file and looks for that file in a folder with sample data.
     Then creates a file-like object and pass it back.
 
@@ -28,18 +29,26 @@ def prepare_bytesio_and_filename(request) -> IO[bytes]:
 
 
 @pytest.fixture(scope="function")
-def prepare_request_object(request):
-    return get(request.param)
+def prepare_request_object(
+    request: _pytest.fixtures.SubRequest,
+) -> requests.models.Response:
+    """Prepare request object based on string containing URL."""
+    return requests.get(request.param)
 
 
 @pytest.mark.integtests
 class TestIsValidImage:
     allowed_extensions = {"JPG", "JPEG", "PNG", "GIF"}
-    correct_files = ("correct01.jpeg", "correct02.png", "correct03.jpg")
-    not_a_valid_image = ("incorrect01.jpg", "incorrect05.sql.jpg")
+    correct_files = (
+        "correct01.jpeg",
+        "correct02.png",
+        "correct03.jpg",
+        "correct04_com.testtest.home.jpg",
+    )
+    not_a_valid_image = ("incorrect01_empty_file.jpg", "incorrect05.sql.jpg")
     wrong_extension_in_name = ("incorrect02.pdf",)
-    different_extensions = ("incorrect03.jpg",)
-    wrong_extension_in_bytes = ("incorrect04.jpg",)
+    different_extensions = ("incorrect03_im_gif.jpg",)
+    wrong_extension_in_bytes = ("incorrect04_im_bmp.jpg",)
 
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", correct_files, indirect=True
@@ -121,10 +130,9 @@ class TestDownloadImages:
 
     @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
     def test_file_should_have_proper_filename_and_be_in_correct_place(
-        self, tmp_path_factory, prepare_request_object
+        self, tmp_path, prepare_request_object
     ):
         data_dict = {"filename.png": prepare_request_object}
-        temp_folder = tmp_path_factory.mktemp("data")
-        file_operations.download_images(data_dict, temp_folder)
-        path = Path(temp_folder / "filename.png")
+        file_operations.download_images(data_dict, tmp_path)
+        path = Path(tmp_path / "filename.png")
         assert path.exists() is True
