@@ -1,3 +1,5 @@
+import uuid
+
 from utilities import string_operations
 
 import pytest
@@ -14,16 +16,19 @@ class TestChangeName:
         ("TEST_FILENAME.WEBP.JPEG", ".jpeg"),
     )
 
+    def test_uuid4_module_should_be_called(self, mocker):
+        uuid4_mock = mocker.patch("uuid.uuid4")
+        string_operations.change_name("test_filename.JPG")
+
+        uuid4_mock.assert_called_once()
+
     @pytest.mark.parametrize(("file_name", "extension"), filenames)
-    def test_extension_should_be_correct_and_uuid4_module_should_be_called(
-        self, mocker, file_name, extension
-    ):
+    def test_extension_should_be_correct(self, monkeypatch, file_name, extension):
         fake_uuid4 = "4d43171d-174b-4501-835b-da5abfbc49d4"
-        uuid4_mock = mocker.patch("uuid.uuid4", return_value=fake_uuid4)
+        monkeypatch.setattr(uuid, "uuid4", lambda: fake_uuid4)
 
         new_filename = string_operations.change_name(file_name)
 
-        uuid4_mock.assert_called_once()
         assert new_filename == fake_uuid4 + extension
 
 
