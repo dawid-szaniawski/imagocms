@@ -7,7 +7,7 @@ from utilities.string_operations import prepare_src_and_alt, change_name
 from utilities.file_operations import download_images
 
 
-def start_sync(upload_folder: Path, websites_data: list, pages: int = 2) -> list:
+def start_sync(upload_folder: Path, websites_data: list, pages: int = 1) -> list:
     """The function that starts the synchronization process.
     Takes one argument on the basis of which it scans sites and gets the appropriate graphics.
 
@@ -32,6 +32,8 @@ def start_sync(upload_folder: Path, websites_data: list, pages: int = 2) -> list
             pagination_class="pagination",
         )
 
+        # To powinna być dodatkowa funkcja, do której po prostu wrzucamy ImageSource i additional pages + upload folder
+        # Może jeszcze mocniej da się do podzielić? Trudno to testować.
         while additional_pages > 0:
             site_src_and_alt = prepare_src_and_alt(site.all_images)
             site_names = [change_name(file_src) for file_src in site_src_and_alt.keys()]

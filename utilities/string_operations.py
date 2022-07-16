@@ -42,6 +42,10 @@ def is_data_correct(user_login: str, user_password: str, user_email: str = "") -
 def prepare_src_and_alt(images_data: ResultSet) -> dict:
     """A method that extracts the source of the image and its alt from the ResultSet object.
 
+    Todo:
+        if we have file with "?" in name, we should split that.
+        Maybe .rsplit("?", 1)[0] will fit it?
+
     Args:
         images_data: bs4.element.ResultSet. Subclass of list with HTML IMG objects."""
     return {image["src"]: image["alt"] for image in images_data}

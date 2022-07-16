@@ -10,7 +10,9 @@ import _pytest.fixtures
 
 
 @pytest.fixture(scope="function")
-def prepare_bytesio_and_filename(request: _pytest.fixtures.SubRequest) -> IO[bytes]:
+def prepare_bytesio_and_filename(
+    request: _pytest.fixtures.SubRequest,
+) -> tuple[IO[bytes], str]:
     """Takes the name of a file and looks for that file in a folder with sample data.
     Then creates a file-like object and pass it back.
 
@@ -18,7 +20,8 @@ def prepare_bytesio_and_filename(request: _pytest.fixtures.SubRequest) -> IO[byt
         request: filename
 
     Returns:
-        BytesIO: file-like object.
+        BytesIO: file-like object,
+        str: string containing filename.
     """
     filename = request.param
     file_path = (
@@ -53,7 +56,9 @@ class TestIsValidImage:
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", correct_files, indirect=True
     )
-    def test_return_true_if_image_is_valid(self, prepare_bytesio_and_filename):
+    def test_return_true_if_image_is_valid(
+        self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
+    ):
         bytesio, filename = prepare_bytesio_and_filename
 
         assert (
@@ -67,7 +72,7 @@ class TestIsValidImage:
         "prepare_bytesio_and_filename", not_a_valid_image, indirect=True
     )
     def test_return_false_if_file_is_not_a_valid_image(
-        self, prepare_bytesio_and_filename
+        self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ):
         bytesio, filename = prepare_bytesio_and_filename
 
@@ -82,7 +87,7 @@ class TestIsValidImage:
         "prepare_bytesio_and_filename", wrong_extension_in_name, indirect=True
     )
     def test_return_false_if_extension_from_name_is_not_in_allowed_extensions(
-        self, prepare_bytesio_and_filename
+        self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ):
         bytesio, filename = prepare_bytesio_and_filename
 
@@ -97,7 +102,7 @@ class TestIsValidImage:
         "prepare_bytesio_and_filename", different_extensions, indirect=True
     )
     def test_return_false_if_extension_from_name_is_not_extension_from_bytes(
-        self, prepare_bytesio_and_filename
+        self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ):
         bytesio, filename = prepare_bytesio_and_filename
 
@@ -112,7 +117,7 @@ class TestIsValidImage:
         "prepare_bytesio_and_filename", wrong_extension_in_bytes, indirect=True
     )
     def test_return_false_if_extension_from_bytes_is_not_in_allowed_extensions(
-        self, prepare_bytesio_and_filename
+        self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ):
         bytesio, filename = prepare_bytesio_and_filename
 
@@ -130,7 +135,7 @@ class TestDownloadImages:
 
     @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
     def test_file_should_have_proper_filename_and_be_in_correct_place(
-        self, tmp_path, prepare_request_object
+        self, tmp_path: Path, prepare_request_object: requests.models.Response
     ):
         data_dict = {"filename.png": prepare_request_object}
         file_operations.download_images(data_dict, tmp_path)
