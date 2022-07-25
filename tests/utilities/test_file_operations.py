@@ -125,7 +125,7 @@ class TestDownloadImages:
     def prepare_request_object(self, request: SubRequest) -> requests.models.Response:
         """Prepare request object based on string containing URL.
         Todo:
-            Mock that response object. Do not send requests to external websites."""
+            Mock the response object. Do not send requests to external websites."""
         return requests.get(request.param)
 
     @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
