@@ -1,5 +1,5 @@
-from webscraper.webscraper import start_sync
-
-
-class TestStartSync:
-    ...
+# from webscraper.webscraper import start_sync
+#
+#
+# class TestStartSync:
+#     ...

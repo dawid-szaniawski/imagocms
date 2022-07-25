@@ -1,42 +1,12 @@
-import io
 from pathlib import Path
-from typing import IO
 import requests
+from typing import IO
+from io import BytesIO
 
 from utilities import file_operations
 
 import pytest
-import _pytest.fixtures
-
-
-@pytest.fixture(scope="function")
-def prepare_bytesio_and_filename(
-    request: _pytest.fixtures.SubRequest,
-) -> tuple[IO[bytes], str]:
-    """Takes the name of a file and looks for that file in a folder with sample data.
-    Then creates a file-like object and pass it back.
-
-    Args:
-        request: filename
-
-    Returns:
-        BytesIO: file-like object,
-        str: string containing filename.
-    """
-    filename = request.param
-    file_path = (
-        Path(__file__).parent / f"../fixtures/example_data/example_images/{filename}"
-    )
-    with open(file_path, "rb") as f:
-        yield io.BytesIO(f.read()), filename
-
-
-@pytest.fixture(scope="function")
-def prepare_request_object(
-    request: _pytest.fixtures.SubRequest,
-) -> requests.models.Response:
-    """Prepare request object based on string containing URL."""
-    return requests.get(request.param)
+from _pytest.fixtures import SubRequest
 
 
 @pytest.mark.integtests
@@ -53,14 +23,35 @@ class TestIsValidImage:
     different_extensions = ("incorrect03_im_gif.jpg",)
     wrong_extension_in_bytes = ("incorrect04_im_bmp.jpg",)
 
+    @pytest.fixture
+    def prepare_bytesio_and_filename(
+        self, request: SubRequest
+    ) -> tuple[IO[bytes], str]:
+        """Takes the name of a file and looks for that file in a folder with sample data.
+        Then creates a file-like object and pass it back.
+
+        Args:
+            request: filename
+
+        Returns:
+            BytesIO: file-like object,
+            str: string containing filename.
+        """
+        filename = request.param
+        file_path = (
+            Path(__file__).parent
+            / f"../fixtures/example_data/example_images/{filename}"
+        )
+        with open(file_path, "rb") as f:
+            yield BytesIO(f.read()), filename
+
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", correct_files, indirect=True
     )
     def test_return_true_if_image_is_valid(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
-    ):
+    ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
-
         assert (
             file_operations.is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
@@ -73,7 +64,7 @@ class TestIsValidImage:
     )
     def test_return_false_if_file_is_not_a_valid_image(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
-    ):
+    ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
 
         assert (
@@ -88,9 +79,8 @@ class TestIsValidImage:
     )
     def test_return_false_if_extension_from_name_is_not_in_allowed_extensions(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
-    ):
+    ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
-
         assert (
             file_operations.is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
@@ -103,9 +93,8 @@ class TestIsValidImage:
     )
     def test_return_false_if_extension_from_name_is_not_extension_from_bytes(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
-    ):
+    ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
-
         assert (
             file_operations.is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
@@ -118,9 +107,8 @@ class TestIsValidImage:
     )
     def test_return_false_if_extension_from_bytes_is_not_in_allowed_extensions(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
-    ):
+    ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
-
         assert (
             file_operations.is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
@@ -133,10 +121,17 @@ class TestIsValidImage:
 class TestDownloadImages:
     url = ("https://pl.wikipedia.org/static/images/project-logos/plwiki.png",)
 
+    @pytest.fixture
+    def prepare_request_object(self, request: SubRequest) -> requests.models.Response:
+        """Prepare request object based on string containing URL.
+        Todo:
+            Mock that response object. Do not send requests to external websites."""
+        return requests.get(request.param)
+
     @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
     def test_file_should_have_proper_filename_and_be_in_correct_place(
         self, tmp_path: Path, prepare_request_object: requests.models.Response
-    ):
+    ) -> None:
         data_dict = {"filename.png": prepare_request_object}
         file_operations.download_images(data_dict, tmp_path)
         path = Path(tmp_path / "filename.png")
