@@ -11,7 +11,7 @@ def prepare_images_from_external_websites(upload_folder: Path) -> None:
 
     Args:
         upload_folder: path where the files should be saved."""
-    logging.basicConfig(filename='test.log', format='%(filename)s: %(message)s',
+    logging.basicConfig(format='%(filename)s: %(message)s',
                         level=logging.DEBUG)
     logging.debug('Preparing demo-data. Start')
     db = get_db()
