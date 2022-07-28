@@ -3,6 +3,7 @@ from pathlib import Path
 from requests import Response
 
 from webscraper.scraper.scraped_site import ImageSource
+from webscraper.scraper.scraper import convert_strings_into_response_objects
 from utilities.string_operations import prepare_src_and_alt, change_name
 from utilities.file_operations import download_images
 
@@ -84,7 +85,7 @@ class WebScraper:
         image_src_and_alt = prepare_src_and_alt(site.all_images)
         image_src = tuple(image_src_and_alt.keys())
         image_names = [change_name(file_src) for file_src in image_src]
-        image_requests = site.get_requests(image_src)
+        image_requests = convert_strings_into_response_objects(image_src)
         return image_src_and_alt, image_names, image_requests
 
     def _expand_synchronization_data(

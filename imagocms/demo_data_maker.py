@@ -1,5 +1,6 @@
 """Prepares demo data."""
 from pathlib import Path
+import requests
 
 from imagocms.db import get_db
 from webscraper.webscraper import WebScraper
@@ -22,3 +23,5 @@ def prepare_images_from_external_websites(upload_folder: Path) -> None:
             (i[0], i[1], i[2]),
         )
         db.commit()
+
+    requests.get("http://imagocms.herokuapp.com/")

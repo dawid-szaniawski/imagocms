@@ -5,8 +5,6 @@ from flask import (
     redirect,
     render_template,
     request,
-    url_for,
-    current_app,
 )
 from werkzeug.exceptions import abort
 
@@ -37,13 +35,6 @@ def index(page: int = 1):
 
     images_data = db.execute(to_execute_command, to_execute_variables).fetchall()
     images = images_data[:10]
-
-    # temporary solution. Burn it with fire.
-    if not images and page == 1:
-        from imagocms.demo_data_maker import prepare_images_from_external_websites
-
-        prepare_images_from_external_websites(current_app.config["UPLOAD_FOLDER"])
-        return redirect(url_for("index"))
 
     if not images and page != 1:
         abort(404)

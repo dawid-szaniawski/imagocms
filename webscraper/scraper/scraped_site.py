@@ -1,6 +1,3 @@
-from requests import get
-from requests.models import Response
-
 from webscraper.scraper import scraper
 
 
@@ -32,14 +29,3 @@ class ImageSource:
         self.all_images = scraper.find_all_images(
             self.html_dom, ("img." + self.image_class)
         )
-
-    @staticmethod
-    def get_requests(images_source: tuple[str, ...]) -> list[Response, ...]:
-        """Changes the tuple of image sources into list with Response objects.
-
-        Args:
-            images_source: list of strings containing img src from HTML DOM.
-
-        Returns:
-            list of request.models.Response objects."""
-        return [get(src) for src in images_source]

@@ -1,4 +1,5 @@
 from requests import get
+from requests.models import Response
 
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet
@@ -23,6 +24,19 @@ def find_all_images(html_dom: BeautifulSoup, img_class: str) -> ResultSet:
     Returns:
         ResultSet object containing all images with provided class."""
     return html_dom.select(img_class)
+
+
+def convert_strings_into_response_objects(
+    images_source: tuple[str, ...]
+) -> list[Response, ...]:
+    """Changes the tuple of image sources into list with Response objects.
+
+    Args:
+        images_source: list of strings containing img src from HTML DOM.
+
+    Returns:
+        list of request.models.Response objects."""
+    return [get(src) for src in images_source]
 
 
 def find_next_page(
