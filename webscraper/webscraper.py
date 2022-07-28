@@ -22,7 +22,7 @@ class WebScraper:
             - pages_to_scan: the number of consecutive subpages of the site to be scanned."""
 
     def __init__(self, upload_folder: Path, websites_data: list[Row, ...]):
-        self.synchronization_data = []
+        self._synchronization_data = []
         self.upload_folder = upload_folder
         self.websites_data = websites_data
 
@@ -60,7 +60,7 @@ class WebScraper:
             )
 
             download_images(dict(zip(image_names, image_requests)), self.upload_folder)
-            self._expand_synchronization_data(
+            self._extend_synchronization_data(
                 website_user_id, image_names, list(image_src_and_alt.values())
             )
 
@@ -88,7 +88,7 @@ class WebScraper:
         image_requests = convert_strings_into_response_objects(image_src)
         return image_src_and_alt, image_names, image_requests
 
-    def _expand_synchronization_data(
+    def _extend_synchronization_data(
         self, user_id: str, image_names: list[str, ...], image_alts: list[str, ...]
     ) -> None:
         """Add new synchronization data into synchronization_data variable.
@@ -97,13 +97,19 @@ class WebScraper:
             user_id: string containing user ID from DB.
             image_names: filenames of images.
             image_alts: alts of images. It will be title of the images."""
-        self.synchronization_data.extend(
+        self._synchronization_data.extend(
             [
                 (user_id, filename, title)
                 for filename, title in zip(image_names, image_alts)
             ]
         )
 
+    def synchronization_data(self):
+        try:
+            return self._synchronization_data
+        finally:
+            self._clear_synchronization_data()
+
     def _clear_synchronization_data(self) -> None:
         """Set synchronization data as an empty list."""
-        self.synchronization_data = []
+        self._synchronization_data = []

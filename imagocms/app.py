@@ -1,32 +1,20 @@
 import os
 import threading
+from time import sleep
 
 from imagocms import db, auth, homepage, add_image
+from imagocms.demo_data_maker import prepare_images_from_external_websites
 
 from flask import Flask
 
 
-def prepare_app_requirements(app):
-    try:
-        os.mkdir(app.instance_path)
-    except OSError:
-        pass
-
-    db.init_app(app)
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(add_image.bp)
-    app.register_blueprint(homepage.bp)
-    app.add_url_rule("/", endpoint="index")
-
-
 def prepare_demo_data(app):
-    from imagocms.demo_data_maker import prepare_images_from_external_websites
-    from time import sleep
-
     while True:
         with app.app_context():
             prepare_images_from_external_websites(app.config["UPLOAD_FOLDER"])
-        sleep(1620)
+        app.logger.debug('Preparing demo-data done. Sleeping.')
+        sleep(16200)
+        app.logger.debug('Sleeping done.')
 
 
 def create_app(test_config=None):
@@ -43,7 +31,18 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    try:
+        os.mkdir(app.instance_path)
+    except OSError:
+        pass
+
+    db.init_app(app)
+
     threading.Thread(target=prepare_demo_data, args=[app]).start()
-    threading.Thread(target=prepare_app_requirements, args=[app]).start()
+
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(add_image.bp)
+    app.register_blueprint(homepage.bp)
+    app.add_url_rule("/", endpoint="index")
 
     return app
