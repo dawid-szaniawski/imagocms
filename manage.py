@@ -9,13 +9,13 @@ import requests
 
 
 def stay_awake():
-    logging.basicConfig(filename='test.log', format='%(filename)s: %(message)s',
-                        level=logging.DEBUG)
-    logging.debug('stay_awake = sleeping')
-    sleep(1620)
-    logging.debug('stay_awake = sending request')
-    requests.get("http://imagocms.herokuapp.com/")
-    logging.debug('stay_awake = sending request - done')
+    while True:
+        logging.basicConfig(format="%(filename)s: %(message)s", level=logging.DEBUG)
+        logging.debug("stay_awake = sleeping")
+        sleep(1620)
+        logging.debug("stay_awake = sending request")
+        requests.get("http://imagocms.herokuapp.com/")
+        logging.debug("stay_awake = sending request - done")
 
 
 app = create_app()

@@ -12,9 +12,9 @@ def prepare_demo_data(app):
     while True:
         with app.app_context():
             prepare_images_from_external_websites(app.config["UPLOAD_FOLDER"])
-        app.logger.debug('Preparing demo-data done. Sleeping.')
+        app.logger.debug("Preparing demo-data done. Sleeping.")
         sleep(16200)
-        app.logger.debug('Sleeping done.')
+        app.logger.debug("Sleeping done.")
 
 
 def create_app(test_config=None):
