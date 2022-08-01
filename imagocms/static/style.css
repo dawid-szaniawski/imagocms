@@ -110,7 +110,7 @@ img.image-image {
   max-width: 80%;
 }
 .error-messages {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   bottom: 10px;
   width: 45%;
