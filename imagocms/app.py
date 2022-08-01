@@ -8,9 +8,8 @@ from flask import Flask
 
 
 def prepare_demo_data(app):
-    while True:
-        with app.app_context():
-            prepare_images_from_external_websites(app.config["UPLOAD_FOLDER"])
+    with app.app_context():
+        prepare_images_from_external_websites(app.config["UPLOAD_FOLDER"])
 
 
 def create_app(test_config=None):

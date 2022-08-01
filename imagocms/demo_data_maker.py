@@ -16,7 +16,7 @@ def prepare_images_from_external_websites(upload_folder: Path) -> None:
     ).fetchall()
     web_scraper = WebScraper(upload_folder, websites_data)
     web_scraper.start_synchronization()
-    for i in web_scraper.synchronization_data():
+    for i in web_scraper.show_synchronization_data():
         db.execute(
             "INSERT INTO images (author_id, filename, title, accepted) VALUES (?, ?, ?, 1)",
             (i[0], i[1], i[2]),

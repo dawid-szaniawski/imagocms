@@ -104,7 +104,11 @@ class WebScraper:
             ]
         )
 
-    def synchronization_data(self):
+    def show_synchronization_data(self) -> list[tuple, ...]:
+        """Returns the synchronization results and then clean the data.
+
+        Returns:
+            list of  tuples containing website_user_id, images.filename, images.title."""
         try:
             return self._synchronization_data
         finally:

@@ -6,8 +6,11 @@ from bs4.element import ResultSet
 
 
 def get_html_dom(website_url: str) -> BeautifulSoup:
-    """Args:
+    """Convert string containing URL address into Response object, and then convert it into BeautifulSoup object.
+
+    Args:
         website_url: string containing url of scraped website
+
     Returns:
         BeautifulSoup object containing HTML DOM."""
     request = get(website_url)

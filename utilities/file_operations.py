@@ -10,10 +10,12 @@ def is_valid_image(
     allowed_extensions: set[str, ...], file: IO[bytes], filename: str
 ) -> bool:
     """Checks if the uploaded file has an extension accepted by the application.
+
     Args:
         allowed_extensions: set with allowed extensions.
         file: file-like object containing the encoded image.
         filename: string containing full filename.
+
     Returns:
         True if file extension is in allowed extensions, and False if not."""
     extension_from_name = filename.rsplit(".")[-1].upper()
@@ -42,6 +44,7 @@ def download_images(
     file_name_and_request_object: dict[str, Response], upload_folder: Path
 ) -> None:
     """Method used to download image to server from another place.
+
     Args:
         upload_folder: path where the file should be saved.
         file_name_and_request_object: a dictionary containing the name of the file and the response object of the file
