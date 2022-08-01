@@ -18,16 +18,10 @@
     <div class="input-container ic2">
 
         <label for="image" class="upload-input input">
-            <input type="file" name="image" id="image" style="display: none;" accept=".png, .jpg, .jpeg, .gif">
+            <input type="file" name="image" id="image" style="display: none;" accept=".png, .jpg, .jpeg, .gif, .webp">
             <img src="{{ url_for('static', filename='upload_32.png') }}" class="upload-image" width="51" height="51" alt="Wrzuć grafikę!">
         </label>
     </div>
       <input type="submit" value="Zapisz" class="submit">
   </form></div>
-        <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-        <script>
-            function delete_flash(flash){
-                $(flash).parent().remove()
-            }
-        </script>
 {% endblock %}
