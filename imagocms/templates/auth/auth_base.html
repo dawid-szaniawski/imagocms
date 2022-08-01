@@ -54,12 +54,6 @@ a.small {
     </div>
     <footer class="footer">
         {% include 'footer.html' %}
-        <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-        <script>
-            function delete_flash(flash){
-                $(flash).parent().remove()
-            }
-        </script>
     </footer>
   </body>
 </html>

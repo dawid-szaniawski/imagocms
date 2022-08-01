@@ -1,5 +1,6 @@
 from requests import get
 from requests.models import Response
+
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet
 
@@ -7,7 +8,6 @@ from bs4.element import ResultSet
 def get_html_dom(website_url: str) -> BeautifulSoup:
     """Args:
         website_url: string containing url of scraped website
-
     Returns:
         BeautifulSoup object containing HTML DOM."""
     request = get(website_url)
@@ -26,6 +26,19 @@ def find_all_images(html_dom: BeautifulSoup, img_class: str) -> ResultSet:
     return html_dom.select(img_class)
 
 
+def convert_strings_into_response_objects(
+    images_source: tuple[str, ...]
+) -> list[Response, ...]:
+    """Changes the tuple of image sources into list with Response objects.
+
+    Args:
+        images_source: list of strings containing img src from HTML DOM.
+
+    Returns:
+        list of request.models.Response objects."""
+    return [get(src) for src in images_source]
+
+
 def find_next_page(
     html_dom: BeautifulSoup, website_url: str, pagination_class: str
 ) -> str:
@@ -37,7 +50,7 @@ def find_next_page(
         pagination_class: string containing a class of "a" object, which contains a hyperlink to go to the next subpage.
 
     Returns:
-        the URL address of the next page"""
+        URL address of the next page."""
     next_url = html_dom.find(class_=pagination_class).find("a")["href"]
     if len(next_url) < 2 or next_url == website_url:
         next_url_index = 2
@@ -47,14 +60,3 @@ def find_next_page(
             ]["href"]
             next_url_index += 1
     return next_url
-
-
-def get_request(src: str) -> Response:
-    """Converts the URL of the image to a request object.
-
-    Args:
-        src: image URL address.
-
-    Returns:
-        Response object."""
-    return get(src)

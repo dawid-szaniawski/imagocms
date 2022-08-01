@@ -1,17 +1,21 @@
 import os
 from pathlib import Path
 from typing import IO
+from requests.models import Response
 
 from PIL import Image
 
 
-def is_valid_image(allowed_extensions: set, file: IO[bytes], filename: str) -> bool:
+def is_valid_image(
+    allowed_extensions: set[str, ...], file: IO[bytes], filename: str
+) -> bool:
     """Checks if the uploaded file has an extension accepted by the application.
     Args:
         allowed_extensions: set with allowed extensions.
         file: file-like object containing the encoded image.
-        filename: string containing full filename."""
-    allowed_extensions = allowed_extensions
+        filename: string containing full filename.
+    Returns:
+        True if file extension is in allowed extensions, and False if not."""
     extension_from_name = filename.rsplit(".")[-1].upper()
 
     if extension_from_name not in allowed_extensions:
@@ -34,12 +38,14 @@ def is_valid_image(allowed_extensions: set, file: IO[bytes], filename: str) -> b
     return True
 
 
-def download_images(file_name_and_request_object: dict, upload_folder: Path) -> None:
+def download_images(
+    file_name_and_request_object: dict[str, Response], upload_folder: Path
+) -> None:
     """Method used to download image to server from another place.
     Args:
         upload_folder: path where the file should be saved.
-        file_name_and_request_object: a dictionary containing the name of the file and the request object of the file we
-         want to download."""
+        file_name_and_request_object: a dictionary containing the name of the file and the response object of the file
+        we want to download."""
     for file_name, file_src in file_name_and_request_object.items():
         with open(os.path.join(upload_folder, file_name), "wb") as file:
             file.write(file_src.content)
