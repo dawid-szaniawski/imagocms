@@ -12,7 +12,8 @@ def get_db():
 
 
 def close_db(e=None):
-    """Checks if a connection was created by checking if g.db was set. If connection exist, it is closed.
+    """Checks if a connection was created by checking if g.db was set.
+    If connection exist, it is closed.
 
     Args:
         e: refers to the error object. None by default."""
@@ -31,7 +32,8 @@ def init_db(app):
 
 
 def add_demo_users_and_external_websites(app):
-    """Function only for testing purpose. It's adding a demo users and external websites to download demo data."""
+    """Function only for testing purpose.
+    It's adding a demo users and external websites to download demo data."""
     with app.app_context():
         db = get_db()
         with app.open_resource("init_data.sql", mode="r") as file:

@@ -10,16 +10,20 @@ from utilities.file_operations import download_images
 
 class WebScraper:
     """Website scraper tool.
-    Scans websites for images, then downloads the images to disk and returns information about downloaded files.
+    Scans websites for images, then downloads the images to disk and returns information
+     about downloaded files.
 
      Args:
          upload_folder: path where the files should be saved.
-         websites_data: a list of sqlite3.Row object. It should contain minimum three columns:
+         websites_data: a list of sqlite3.Row object. It should contain minimum three
+            columns:
             - website_url: string containing url of scraped website,
             - image_class: string containing class of the images in the HTML DOM,
             - website_user_id: Integer. User ID from database,
-            - pagination_class: *optional* string containing a class of link to go to the next subpage,
-            - pages_to_scan: the number of consecutive subpages of the site to be scanned."""
+            - pagination_class: *optional* string containing a class of link
+                to go to the next subpage,
+            - pages_to_scan: the number of consecutive subpages of the site
+                to be scanned."""
 
     def __init__(self, upload_folder: Path, websites_data: list[Row, ...]):
         self._synchronization_data = []
@@ -53,7 +57,8 @@ class WebScraper:
         Args:
             pages: how many pages of the website should it scan
             site: the ImageSource object. Represents the scraped website.
-            website_user_id: string containing user ID from DB. Used for extending the synchronization data."""
+            website_user_id: string containing user ID from DB. Used for extending the
+                synchronization data."""
         while pages > 0:
             image_src_and_alt, image_names, image_requests = self._prepare_images_data(
                 site
@@ -108,7 +113,7 @@ class WebScraper:
         """Returns the synchronization results and then clean the data.
 
         Returns:
-            list of  tuples containing website_user_id, images.filename, images.title."""
+            list of  tuples containing website_user_id, image.filename, image.title."""
         try:
             return self._synchronization_data
         finally:

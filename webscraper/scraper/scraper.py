@@ -6,7 +6,8 @@ from bs4.element import ResultSet
 
 
 def get_html_dom(website_url: str) -> BeautifulSoup:
-    """Convert string containing URL address into Response object, and then convert it into BeautifulSoup object.
+    """Convert string containing URL address into Response object,
+    and then convert it into BeautifulSoup object.
 
     Args:
         website_url: string containing url of scraped website
@@ -50,7 +51,8 @@ def find_next_page(
     Args:
         html_dom: BeautifulSoup object containing HTML DOM.
         website_url: string containing url of scraped website.
-        pagination_class: string containing a class of "a" object, which contains a hyperlink to go to the next subpage.
+        pagination_class: string containing a class of "a" object, which contains
+        a hyperlink to go to the next subpage.
 
     Returns:
         URL address of the next page."""
