@@ -27,8 +27,8 @@ class TestIsValidImage:
     def prepare_bytesio_and_filename(
         self, request: SubRequest
     ) -> tuple[IO[bytes], str]:
-        """Takes the name of a file and looks for that file in a folder with sample data.
-        Then creates a file-like object and pass it back.
+        """Takes the name of a file and looks for that file in a folder with
+        sample data. Then creates a file-like object and pass it back.
 
         Args:
             request: filename

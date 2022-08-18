@@ -18,7 +18,8 @@ def change_name(file_name: str) -> str:
 
 def is_data_correct(user_login: str, user_password: str, user_email: str = "") -> bool:
     """Checks if the user has entered login, password, and email address (optional).
-    Additionally, it verifies that they are of the correct length and that they do not contain forbidden characters.
+    Additionally, it verifies that they are of the correct length and that they do not
+    contain forbidden characters.
 
     Args:
         user_login: string containing login
@@ -48,7 +49,8 @@ def is_data_correct(user_login: str, user_password: str, user_email: str = "") -
 
 
 def prepare_src_and_alt(images_data: ResultSet) -> dict[str, str]:
-    """A method that extracts the source of the image and its alt from the ResultSet object.
+    """A method that extracts the source of the image and its alt from
+    the ResultSet object.
 
     Args:
         images_data: bs4.element.ResultSet. Subclass of list with HTML IMG objects.

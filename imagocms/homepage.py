@@ -19,14 +19,16 @@ bp = Blueprint("homepage", __name__)
 @bp.route("/<int:page>")
 def index(page: int = 1):
     """Route for the home page. It can take optional argument.
-    Shows the newest post with its title, description, image, and the number of comments.
+    Shows the newest post with its title, description, image,
+    and the number of comments.
 
     Args:
         page: int. On one page we show 10 post."""
     db = get_db()
 
     to_execute_command = """
-    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
+    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username,
+    COUNT(c.id) AS comments
     FROM images i
     LEFT JOIN user u ON i.author_id = u.id
     LEFT JOIN comments c ON i.id = c.image_id
@@ -53,7 +55,8 @@ def index(page: int = 1):
 @bp.route("/author:<author_name>/<int:page>")
 def author_index(page: int = 1, author_name: str = None):
     """Route for the author page. It can take two optional arguments.
-    Shows the newest author post with its title, description, image, and the number of comments.
+    Shows the newest author post with its title, description, image,
+    and the number of comments.
 
     Args:
         page: int. On one page we show 10 post.
@@ -61,7 +64,8 @@ def author_index(page: int = 1, author_name: str = None):
     db = get_db()
 
     to_execute_command = """
-    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username, COUNT(c.id) AS comments
+    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username,
+    COUNT(c.id) AS comments
     FROM images i
     LEFT JOIN user u ON i.author_id = u.id
     LEFT JOIN comments c ON i.id = c.image_id
@@ -91,7 +95,8 @@ def author_index(page: int = 1, author_name: str = None):
 
 @bp.route("/img/<int:img_id>", methods=("GET", "POST"))
 def image_page(img_id: int):
-    """Route for single post page. It takes one argument and shows the post and all the comments related to the post.
+    """Route for single post page. It takes one argument and shows the post and all the
+    comments related to the post.
 
     Args:
         img_id: int. Unique ID number from the database."""
@@ -116,13 +121,15 @@ def image_page(img_id: int):
         get_db()
         .execute(
             """
-    SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created, img_u.username AS img_author,
-    c.body, c.created AS c_created, u.username AS c_author, counter.c_count
+    SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created,
+    img_u.username AS img_author, c.body, c.created AS c_created,
+    u.username AS c_author, counter.c_count
     FROM images i
     LEFT JOIN user img_u ON i.author_id = img_u.id
     LEFT JOIN comments c ON i.id = c.image_id
     LEFT JOIN user u ON c.author_id = u.id
-    CROSS JOIN (SELECT COUNT(*) AS c_count FROM comments c2 WHERE c2.image_id = ?) counter
+    CROSS JOIN (SELECT COUNT(*) AS c_count
+    FROM comments c2 WHERE c2.image_id = ?) counter
     WHERE i.id = ? ORDER BY c_created DESC""",
             (img_id, img_id),
         )
@@ -133,14 +140,16 @@ def image_page(img_id: int):
 
 
 def set_next_page(next_page_data: list[sqlite3.Row | None], page: int) -> int | None:
-    """If is any data in next_page_data it increases page by one. If next_page_data is empty, returns None.
+    """If is any data in next_page_data it increases page by one.
+    If next_page_data is empty, returns None.
 
     Args:
         next_page_data: empty list or list containing sqlite3.Row object.
         page: an integer that will be increased by one if the conditions are met.
 
     Returns
-        integer or none. If next_page_data is not empty, it increments the value of page by one."""
+        integer or none. If next_page_data is not empty,
+        it increments the value of page by one."""
     if not next_page_data:
         return None
     else:

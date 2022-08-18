@@ -2,7 +2,8 @@ from webscraper.scraper import scraper
 
 
 class ImageSource:
-    """An object that represents the page being scraped. Takes two arguments when creating the object.
+    """An object that represents the page being scraped.
+    Takes two arguments when creating the object.
 
     Args:
         website_url: string containing url of scraped website

@@ -138,8 +138,10 @@ class TestPrepareSrcAndAlt:
         self, prepare_result_set: bs4.element.ResultSet
     ) -> None:
         valid_data = {
-            "https://example-website.com/contents/1mFjN19GzihJ9K21FoNbeuZGxLZJJQ2s.jpg": "Short alt",
-            "https://www.example-another-image.com.pl/contents/2022/06/normal/or_not/6gOXbkxrkHMITAOiNdDsuWu14sIMihrM."
-            "jpeg": "This time alt is much longer than before. Sometimes we have to deal with it.",
+            "https://example-website.com/contents/"
+            "1mFjN19GzihJ9K21FoNbeuZGxLZJJQ2s.jpg": "Short alt",
+            "https://www.example-another-image.com.pl/contents/2022/06/normal/"
+            "or_not/6gOXbkxrkHMITAOiNdDsuWu14sIMihrM.jpeg": "This time"
+            " alt is much longer than before. Sometimes we have to deal with it.",
         }
         assert string_operations.prepare_src_and_alt(prepare_result_set) == valid_data

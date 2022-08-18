@@ -47,8 +47,8 @@ def download_images(
 
     Args:
         upload_folder: path where the file should be saved.
-        file_name_and_request_object: a dictionary containing the name of the file and the response object of the file
-        we want to download."""
+        file_name_and_request_object: a dictionary containing the name of the file and
+        the response object of the file we want to download."""
     for file_name, file_src in file_name_and_request_object.items():
         with open(os.path.join(upload_folder, file_name), "wb") as file:
             file.write(file_src.content)
