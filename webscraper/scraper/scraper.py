@@ -1,6 +1,5 @@
 from requests import get
 from requests.models import Response
-
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet
 

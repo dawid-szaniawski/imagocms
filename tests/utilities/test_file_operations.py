@@ -1,12 +1,12 @@
 from pathlib import Path
-import requests
 from typing import IO
 from io import BytesIO
 
-from utilities import file_operations
-
+import requests
 import pytest
 from _pytest.fixtures import SubRequest
+
+from utilities import file_operations
 
 
 @pytest.mark.integtests

@@ -1,10 +1,10 @@
 import os
 import threading
 
+from flask import Flask
+
 from imagocms import db, auth, homepage, add_image
 from imagocms.demo_data_maker import prepare_images_from_external_websites
-
-from flask import Flask
 
 
 def prepare_demo_data(app):

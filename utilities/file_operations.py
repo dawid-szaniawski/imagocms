@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 from typing import IO
-from requests.models import Response
 
+from requests.models import Response
 from PIL import Image
 
 

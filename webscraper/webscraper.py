@@ -1,5 +1,6 @@
 from sqlite3 import Row
 from pathlib import Path
+
 from requests import Response
 
 from webscraper.scraper.scraped_site import ImageSource

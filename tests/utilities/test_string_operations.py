@@ -1,11 +1,11 @@
 import uuid
 from pathlib import Path
 
-from utilities import string_operations
-
 import pytest
 from pytest_mock import MockerFixture
 import bs4
+
+from utilities import string_operations
 
 
 @pytest.mark.unittests
