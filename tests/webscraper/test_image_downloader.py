@@ -72,14 +72,14 @@ class TestWriteBytesToFile:
         assert file.exists()
 
 
-@pytest.mark.unittests
+@pytest.mark.integtests
 class TestConvertStringIntoBytesObject:
     file_scr = ("https://imagocms.com",)
 
     @pytest.fixture
     def mocked_responses(self):
-        with RequestsMock() as rsps:
-            yield rsps
+        with RequestsMock() as response:
+            yield response
 
     @pytest.mark.parametrize("file_src", file_scr)
     def test_request_get_and_content_should_be_called(
