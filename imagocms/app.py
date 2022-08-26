@@ -4,12 +4,13 @@ import threading
 from flask import Flask
 
 from imagocms import db, auth, homepage, add_image
-from imagocms.demo_data_maker import prepare_images_from_external_websites
+from imagocms.demo_data_maker import ExternalWebsitesSynchronizer
 
 
 def prepare_demo_data(app):
     with app.app_context():
-        prepare_images_from_external_websites(app.config["UPLOAD_FOLDER"])
+        synchronizer = ExternalWebsitesSynchronizer(app.config["UPLOAD_FOLDER"])
+        synchronizer.prepare_images_from_external_websites()
 
 
 def create_app(test_config=None):

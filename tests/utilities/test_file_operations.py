@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import IO
 from io import BytesIO
 
-import requests
 import pytest
 from _pytest.fixtures import SubRequest
 
@@ -122,17 +121,30 @@ class TestDownloadImages:
     url = ("https://pl.wikipedia.org/static/images/project-logos/plwiki.png",)
 
     @pytest.fixture
-    def prepare_request_object(self, request: SubRequest) -> requests.models.Response:
-        """Prepare request object based on string containing URL.
-        Todo:
-            Mock the response object. Do not send requests to external websites."""
-        return requests.get(request.param)
+    def prepare_bytes_and_filename(self, request: SubRequest) -> dict[str, bytes]:
+        """Takes the name of a file and looks for that file in a folder with
+        sample data. Then creates a file-like object and pass it back.
+        Args:
+            request: filename
+        Returns:
+            bytes: file-like object,
+            str: string containing filename.
+        """
+        filename = request.param
+        file_path = (
+            Path(__file__).parent
+            / f"../fixtures/example_data/example_images/{filename}"
+        )
+        with open(file_path, "rb") as f:
+            yield {filename: f.read()}
 
-    @pytest.mark.parametrize("prepare_request_object", url, indirect=True)
+    @pytest.mark.parametrize(
+        "prepare_bytes_and_filename", ("correct01.jpeg",), indirect=True
+    )
     def test_file_should_have_proper_filename_and_be_in_correct_place(
-        self, tmp_path: Path, prepare_request_object: requests.models.Response
+        self, tmp_path: Path, prepare_bytes_and_filename: dict[str, bytes]
     ) -> None:
-        data_dict = {"filename.png": prepare_request_object}
-        file_operations.download_images(data_dict, tmp_path)
-        path = Path(tmp_path / "filename.png")
+        file_operations.save_images(prepare_bytes_and_filename, tmp_path)
+        filename = list(prepare_bytes_and_filename.keys())[0]
+        path = Path(tmp_path / filename)
         assert path.exists() is True

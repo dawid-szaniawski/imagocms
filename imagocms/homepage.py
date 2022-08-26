@@ -27,7 +27,7 @@ def index(page: int = 1):
     db = get_db()
 
     to_execute_command = """
-    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username,
+    SELECT i.id, i.title, i.description, i.source, i.filename, i.created, u.username,
     COUNT(c.id) AS comments
     FROM images i
     LEFT JOIN user u ON i.author_id = u.id
@@ -64,7 +64,7 @@ def author_index(page: int = 1, author_name: str = None):
     db = get_db()
 
     to_execute_command = """
-    SELECT i.id, i.title, i.description, i.img_src, i.filename, i.created, u.username,
+    SELECT i.id, i.title, i.description, i.source, i.filename, i.created, u.username,
     COUNT(c.id) AS comments
     FROM images i
     LEFT JOIN user u ON i.author_id = u.id
@@ -121,7 +121,7 @@ def image_page(img_id: int):
         get_db()
         .execute(
             """
-    SELECT i.title, i.description, i.img_src, i.filename, i.created AS img_created,
+    SELECT i.title, i.description, i.source, i.filename, i.created AS img_created,
     img_u.username AS img_author, c.body, c.created AS c_created,
     u.username AS c_author, counter.c_count
     FROM images i

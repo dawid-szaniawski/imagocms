@@ -24,16 +24,17 @@
             </div>
             {% endif %}
 
-        {% if image['filename'] or image['img_src'] %}
+        {% if image['filename'] %}
             <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" title="{{ image['title'] }}">
-            {% if image['filename'] %}
-                <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
-                     alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
-            {% else %}
-                <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
-                alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
-            {% endif %}
+            <img src="{{ url_for('static', filename='images/'+image['filename']) }}" class="image-image" name="{{ image['title'] }}"
+                 alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
             </a>
+        {% endif %}
+
+        {% if image['source'] %}
+        <div class="image-source-container">
+            <p class="image-source-p"><a href="{{ image['source'] }}" class="image-source-a" target="_blank">(źródło)</a></p>
+        </div>
         {% endif %}
 
     </div>

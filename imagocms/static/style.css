@@ -61,6 +61,14 @@ article{
   color: #f60;
   text-decoration: none;
 }
+.image-source-container {
+    width: fit-content;
+    margin: auto;
+}
+.image-source-a {
+    text-decoration: none;
+    color: #777;
+}
 .pagination-a {
   background: #f60;
   border-radius: 2px;
@@ -84,7 +92,7 @@ article{
   color: #fff;
   padding: 10px;
 }
-a.nav-link:hover {
+.nav-link:hover {
   transition: .5s;
   text-decoration: underline;
 }
@@ -95,10 +103,10 @@ a.nav-link:hover {
   display: flex;
   width: 100%;
 }
-img.comments-image {
+.comments-image {
   padding: 4px;
 }
-img.image-image {
+.image-image {
     margin-top: 8px;
 }
 .homepage-comments {
@@ -141,7 +149,7 @@ img.image-image {
   display: flex;
   justify-content: center;
 }
-form {
+.form-base {
   background-color: #1f1f1f;
   border-radius: 2px;
   box-sizing: border-box;
@@ -261,12 +269,12 @@ form {
   max-width: 750px;
   margin: auto;
 }
-form.add-comment-form {
+.add-comment-form {
   display: flex;
   max-width: 100%;
   padding: 10px 0;
 }
-button.comment-submit {
+.comment-submit {
   background-color: #f60;
   border-radius: 2px;
   border: 0;
@@ -276,7 +284,7 @@ button.comment-submit {
   width: 50px;
   transition: .5s;
 }
-button.comment-submit:hover {
+.comment-submit:hover {
   filter: brightness(1.2);
 }
 img.submit-image {
@@ -305,12 +313,12 @@ p.body {
   font-size: 1.4rem;
   margin-right: 8px;
 }
-a.comments-link {
+.comments-link {
   text-decoration: none;
   color: #777;
   transition: .5s;
 }
-a.comments-link:hover {
+.comments-link:hover, .image-source-p:hover {
   text-decoration: underline;
 }
 @media screen and (min-width: 400px) and (min-height: 670px) {

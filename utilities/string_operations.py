@@ -1,6 +1,5 @@
 import uuid
 
-from bs4.element import ResultSet
 from werkzeug.utils import secure_filename
 
 
@@ -46,15 +45,3 @@ def is_data_correct(user_login: str, user_password: str, user_email: str = "") -
             return False
 
     return True
-
-
-def prepare_src_and_alt(images_data: ResultSet) -> dict[str, str]:
-    """A method that extracts the source of the image and its alt from
-    the ResultSet object.
-
-    Args:
-        images_data: bs4.element.ResultSet. Subclass of list with HTML IMG objects.
-
-    Returns:
-        dict containing img_src: img_alt from HTML DOM."""
-    return {image["src"]: image["alt"] for image in images_data}
