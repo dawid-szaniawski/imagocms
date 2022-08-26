@@ -1,5 +1,4 @@
-from pathlib import Path
-from typing import IO
+from typing import IO, Callable
 from io import BytesIO
 
 import pytest
@@ -24,25 +23,13 @@ class TestIsValidImage:
 
     @pytest.fixture
     def prepare_bytesio_and_filename(
-        self, request: SubRequest
+            self,
+            request: SubRequest,
+            bytes_generator: Callable[[str], bytes]
     ) -> tuple[IO[bytes], str]:
-        """Takes the name of a file and looks for that file in a folder with
-        sample data. Then creates a file-like object and pass it back.
-
-        Args:
-            request: filename
-
-        Returns:
-            BytesIO: file-like object,
-            str: string containing filename.
-        """
         filename = request.param
-        file_path = (
-            Path(__file__).parent
-            / f"../fixtures/example_data/example_images/{filename}"
-        )
-        with open(file_path, "rb") as f:
-            yield BytesIO(f.read()), filename
+        bytes_object = bytes_generator(filename)
+        yield BytesIO(bytes_object), filename
 
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", correct_files, indirect=True

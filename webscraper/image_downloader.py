@@ -9,7 +9,7 @@ class Downloader:
         self.upload_folder = upload_folder
 
     def save_image(self, filename: str, file_src: str) -> None:
-        bytes_object = self.convert_string_into_bytes_object(file_src)
+        bytes_object = self._convert_string_into_bytes_object(file_src)
         self._write_bytes_to_file(filename, bytes_object)
 
     def _write_bytes_to_file(self, file_name: str, bytes_object: bytes) -> None:
@@ -17,5 +17,5 @@ class Downloader:
             file.write(bytes_object)
 
     @staticmethod
-    def convert_string_into_bytes_object(image_src: str) -> bytes:
+    def _convert_string_into_bytes_object(image_src: str) -> bytes:
         return get(image_src).content
