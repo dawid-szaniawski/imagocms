@@ -8,6 +8,7 @@ from webscraper.image_downloader import Downloader
 
 class ExternalWebsitesSynchronizer:
     """Prepares demo data."""
+
     def __init__(self, upload_folder: Path):
         self.upload_folder = upload_folder
         self.images_data = []
@@ -63,7 +64,11 @@ class ExternalWebsitesSynchronizer:
         ext_websites_dict = sqlite_row_into_dict(
             db.execute(
                 """SELECT
-                website_user_id, website_url, image_class, pages_to_scan, pagination_class
+                website_user_id,
+                website_url,
+                image_class,
+                pages_to_scan,
+                pagination_class
                 FROM ext_websites"""
             ).fetchall()
         )

@@ -16,7 +16,7 @@ def prepare_downloader(tmp_path: Path) -> Downloader:
 @pytest.mark.unittests
 class TestDownloaderInit:
     def test_object_upload_folder_should_have_proper_value(
-            self, tmp_path: Path
+        self, tmp_path: Path
     ) -> None:
         downloader = Downloader(tmp_path)
         assert downloader.upload_folder == tmp_path
@@ -25,21 +25,19 @@ class TestDownloaderInit:
 @pytest.mark.unittests
 class TestDownloaderSaveImage:
     def test_convert_string_into_bytes_object_should_be_called(
-            self, prepare_downloader: Downloader, mocker: MockerFixture
+        self, prepare_downloader: Downloader, mocker: MockerFixture
     ) -> None:
         convert_string_into_bytes_object_mock = mocker.patch(
             "webscraper.image_downloader.Downloader._convert_string_into_bytes_object"
         )
-        mocker.patch(
-            "webscraper.image_downloader.Downloader._write_bytes_to_file"
-        )
+        mocker.patch("webscraper.image_downloader.Downloader._write_bytes_to_file")
         filename, file_src = "file_name", "file_src"
         prepare_downloader.save_image(filename, file_src)
 
         convert_string_into_bytes_object_mock.assert_called_once_with(file_src)
 
     def test_write_bytes_to_file_should_be_called(
-            self, prepare_downloader: Downloader, mocker: MockerFixture
+        self, prepare_downloader: Downloader, mocker: MockerFixture
     ) -> None:
         filename, file_src = "file_name", "file_src"
 
@@ -58,10 +56,10 @@ class TestDownloaderSaveImage:
 @pytest.mark.integtests
 class TestWriteBytesToFile:
     def test_file_should_have_proper_name_and_be_in_correct_place(
-            self,
-            tmp_path: Path,
-            mocker: MockerFixture,
-            bytes_generator: Callable[[str], bytes]
+        self,
+        tmp_path: Path,
+        mocker: MockerFixture,
+        bytes_generator: Callable[[str], bytes],
     ) -> None:
         filename = "correct01.jpeg"
         image_bytes = bytes_generator(filename)
@@ -76,7 +74,7 @@ class TestWriteBytesToFile:
 
 @pytest.mark.unittests
 class TestConvertStringIntoBytesObject:
-    file_scr = ("https://imagocms.com", )
+    file_scr = ("https://imagocms.com",)
 
     @pytest.fixture
     def mocked_responses(self):
@@ -85,17 +83,17 @@ class TestConvertStringIntoBytesObject:
 
     @pytest.mark.parametrize("file_src", file_scr)
     def test_request_get_and_content_should_be_called(
-            self,
-            mocker: MockerFixture,
-            prepare_downloader: Downloader,
-            mocked_responses: RequestsMock,
-            file_src: str
+        self,
+        mocker: MockerFixture,
+        prepare_downloader: Downloader,
+        mocked_responses: RequestsMock,
+        file_src: str,
     ):
         write_bytes_to_file_mocker = mocker.patch(
             "webscraper.image_downloader.Downloader._write_bytes_to_file"
         )
 
-        filename, bytes_object = "test_filename", b'ImagoCmsRulez'
+        filename, bytes_object = "test_filename", b"ImagoCmsRulez"
         mocked_responses.get(
             file_src,
             body=bytes_object,

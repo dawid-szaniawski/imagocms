@@ -23,9 +23,7 @@ class TestIsValidImage:
 
     @pytest.fixture
     def prepare_bytesio_and_filename(
-            self,
-            request: SubRequest,
-            bytes_generator: Callable[[str], bytes]
+        self, request: SubRequest, bytes_generator: Callable[[str], bytes]
     ) -> tuple[IO[bytes], str]:
         filename = request.param
         bytes_object = bytes_generator(filename)
@@ -39,10 +37,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
-            is True
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename) is True
         )
 
     @pytest.mark.parametrize(
@@ -54,9 +49,7 @@ class TestIsValidImage:
         bytesio, filename = prepare_bytesio_and_filename
 
         assert (
-            is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
         )
 
@@ -68,9 +61,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
         )
 
@@ -82,9 +73,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
         )
 
@@ -96,8 +85,6 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            is_valid_image(
-                self.__class__.allowed_extensions, bytesio, filename
-            )
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
         )

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, KW_ONLY
+from dataclasses import dataclass
 
 
 @dataclass
