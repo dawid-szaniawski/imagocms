@@ -93,11 +93,11 @@ class TestIsDataCorrect:
     def test_email_address_is_no_needed_to_pass(
         self, login: str, password: str
     ) -> None:
-        assert string_operations.is_data_correct(login, password) is True
+        assert string_operations.is_data_correct(login, password)
 
     @pytest.mark.parametrize(("login", "password"), correct_login_and_password)
     def test_correct_data_with_email_should_return_true(
         self, login: str, password: str
     ) -> None:
         email = "test@test.pl"
-        assert string_operations.is_data_correct(login, password, email) is True
+        assert string_operations.is_data_correct(login, password, email)

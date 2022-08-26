@@ -37,7 +37,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            is_valid_image(self.__class__.allowed_extensions, bytesio, filename) is True
+            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
         )
 
     @pytest.mark.parametrize(
