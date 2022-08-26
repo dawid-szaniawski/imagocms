@@ -5,7 +5,7 @@ from io import BytesIO
 import pytest
 from _pytest.fixtures import SubRequest
 
-from utilities import file_operations
+from utilities.file_operations import is_valid_image
 
 
 @pytest.mark.integtests
@@ -52,7 +52,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            file_operations.is_valid_image(
+            is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
             )
             is True
@@ -67,7 +67,7 @@ class TestIsValidImage:
         bytesio, filename = prepare_bytesio_and_filename
 
         assert (
-            file_operations.is_valid_image(
+            is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
             )
             is False
@@ -81,7 +81,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            file_operations.is_valid_image(
+            is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
             )
             is False
@@ -95,7 +95,7 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            file_operations.is_valid_image(
+            is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
             )
             is False
@@ -109,42 +109,8 @@ class TestIsValidImage:
     ) -> None:
         bytesio, filename = prepare_bytesio_and_filename
         assert (
-            file_operations.is_valid_image(
+            is_valid_image(
                 self.__class__.allowed_extensions, bytesio, filename
             )
             is False
         )
-
-
-@pytest.mark.integtests
-class TestDownloadImages:
-    url = ("https://pl.wikipedia.org/static/images/project-logos/plwiki.png",)
-
-    @pytest.fixture
-    def prepare_bytes_and_filename(self, request: SubRequest) -> dict[str, bytes]:
-        """Takes the name of a file and looks for that file in a folder with
-        sample data. Then creates a file-like object and pass it back.
-        Args:
-            request: filename
-        Returns:
-            bytes: file-like object,
-            str: string containing filename.
-        """
-        filename = request.param
-        file_path = (
-            Path(__file__).parent
-            / f"../fixtures/example_data/example_images/{filename}"
-        )
-        with open(file_path, "rb") as f:
-            yield {filename: f.read()}
-
-    @pytest.mark.parametrize(
-        "prepare_bytes_and_filename", ("correct01.jpeg",), indirect=True
-    )
-    def test_file_should_have_proper_filename_and_be_in_correct_place(
-        self, tmp_path: Path, prepare_bytes_and_filename: dict[str, bytes]
-    ) -> None:
-        file_operations.save_images(prepare_bytes_and_filename, tmp_path)
-        filename = list(prepare_bytes_and_filename.keys())[0]
-        path = Path(tmp_path / filename)
-        assert path.exists() is True

@@ -1,9 +1,7 @@
 import uuid
-from pathlib import Path
 
 import pytest
 from pytest_mock import MockerFixture
-import bs4
 
 from utilities import string_operations
 
@@ -34,7 +32,7 @@ class TestChangeName:
 
 
 @pytest.mark.unittests
-class TestCheckCorrectnessOfTheData:
+class TestIsDataCorrect:
     data_with_none = (
         (None, None),
         ("login", None),
@@ -103,45 +101,3 @@ class TestCheckCorrectnessOfTheData:
     ) -> None:
         email = "test@test.pl"
         assert string_operations.is_data_correct(login, password, email) is True
-
-
-@pytest.mark.integtests
-class TestPrepareSrcAndAlt:
-    @pytest.fixture(scope="class")
-    def example_website(self) -> bs4.BeautifulSoup:
-        """Loads HTML document and prepare BeautifulSoup object based on document data.
-
-        Returns: BeautifulSoup object."""
-        example_website_path = (
-            Path(__file__).parent / "../fixtures/example_data/example_website.html"
-        )
-        with open(example_website_path, "r") as f:
-            yield bs4.BeautifulSoup(f.read(), "html.parser")
-
-    @pytest.fixture(scope="class")
-    def prepare_result_set(
-        self, example_website: bs4.BeautifulSoup
-    ) -> bs4.element.ResultSet:
-        """Prepares ResultSet object based on BeautifulSoup object.
-
-        Returns: ResultSet object."""
-        return example_website.select("img.full-image")
-
-    def test_output_data_should_be_a_dict(
-        self, prepare_result_set: bs4.element.ResultSet
-    ) -> None:
-        assert isinstance(
-            string_operations.prepare_src_and_alt(prepare_result_set), dict
-        )
-
-    def test_output_should_have_valid_data(
-        self, prepare_result_set: bs4.element.ResultSet
-    ) -> None:
-        valid_data = {
-            "https://example-website.com/contents/"
-            "1mFjN19GzihJ9K21FoNbeuZGxLZJJQ2s.jpg": "Short alt",
-            "https://www.example-another-image.com.pl/contents/2022/06/normal/"
-            "or_not/6gOXbkxrkHMITAOiNdDsuWu14sIMihrM.jpeg": "This time"
-            " alt is much longer than before. Sometimes we have to deal with it.",
-        }
-        assert string_operations.prepare_src_and_alt(prepare_result_set) == valid_data
