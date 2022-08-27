@@ -98,7 +98,7 @@ class TestConvertStringIntoBytesObject:
             "webscraper.image_downloader.Downloader._write_bytes_to_file"
         )
 
-        file_src = "https://imagocms.com"
+        file_src = "https://webludus.pl"
         filename, bytes_object = "test_filename", b"ImagoCmsRulez"
         mocked_responses.get(
             file_src,

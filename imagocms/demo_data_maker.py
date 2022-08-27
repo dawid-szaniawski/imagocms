@@ -53,7 +53,7 @@ class ExternalWebsitesSynchronizer:
                     {
                         "website_user_id": row["website_user_id"],
                         "website_url": row["website_url"],
-                        "image_class": row["image_class"],
+                        "images_container_class": row["images_container_class"],
                         "pages_to_scan": row["pages_to_scan"],
                     }
                 )
@@ -66,7 +66,7 @@ class ExternalWebsitesSynchronizer:
                 """SELECT
                 website_user_id,
                 website_url,
-                image_class,
+                images_container_class,
                 pages_to_scan,
                 pagination_class
                 FROM ext_websites"""

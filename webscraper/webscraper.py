@@ -12,7 +12,7 @@ class WebScraper:
          website_data: a list of sqlite3.Row object. It should contain minimum three
             columns:
             - website_url: string containing url of scraped website,
-            - image_class: string containing class of the images in the HTML DOM,
+            - images_container_class: string containing class of the images container,
             - website_user_id: Integer. User ID from database,
             - pagination_class: *optional* string containing a class of link
                 to go to the next subpage,
@@ -36,7 +36,7 @@ class WebScraper:
             pagination_class = "pagination"
         return ImageSource(
             website_url=website["website_url"],
-            image_class=website["image_class"],
+            image_class=website["images_container_class"],
             pagination_class=pagination_class,
             pages_to_scan=website["pages_to_scan"],
         )

@@ -12,4 +12,4 @@ def bytes_generator():
         with open(file_path, "rb") as f:
             return f.read()
 
-    return prepare_bytes
+    yield prepare_bytes
