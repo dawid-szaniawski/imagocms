@@ -18,7 +18,9 @@ class TestDownloaderInit:
     def test_object_upload_folder_should_have_proper_value(
         self, tmp_path: Path
     ) -> None:
+
         downloader = Downloader(tmp_path)
+
         assert downloader.upload_folder == tmp_path
 
 
@@ -27,11 +29,13 @@ class TestDownloaderSaveImage:
     def test_convert_string_into_bytes_object_should_be_called(
         self, prepare_downloader: Downloader, mocker: MockerFixture
     ) -> None:
+
+        mocker.patch("webscraper.image_downloader.Downloader._write_bytes_to_file")
+        filename, file_src = "file_name", "file_src"
+
         convert_string_into_bytes_object_mock = mocker.patch(
             "webscraper.image_downloader.Downloader._convert_string_into_bytes_object"
         )
-        mocker.patch("webscraper.image_downloader.Downloader._write_bytes_to_file")
-        filename, file_src = "file_name", "file_src"
         prepare_downloader.save_image(filename, file_src)
 
         convert_string_into_bytes_object_mock.assert_called_once_with(file_src)
@@ -39,8 +43,8 @@ class TestDownloaderSaveImage:
     def test_write_bytes_to_file_should_be_called(
         self, prepare_downloader: Downloader, mocker: MockerFixture
     ) -> None:
-        filename, file_src = "file_name", "file_src"
 
+        filename, file_src = "file_name", "file_src"
         convert_string_into_bytes_object_mock = mocker.patch(
             "webscraper.image_downloader.Downloader._convert_string_into_bytes_object"
         )
@@ -50,6 +54,7 @@ class TestDownloaderSaveImage:
         )
 
         prepare_downloader.save_image(filename, file_src)
+
         write_bytes_to_file_mock.assert_called_once_with(filename, file_src)
 
 
@@ -61,38 +66,39 @@ class TestWriteBytesToFile:
         mocker: MockerFixture,
         bytes_generator: Callable[[str], bytes],
     ) -> None:
+
         filename = "correct01.jpeg"
         image_bytes = bytes_generator(filename)
         convert_string_into_bytes_object_mock = mocker.patch(
             "webscraper.image_downloader.Downloader._convert_string_into_bytes_object"
         )
         convert_string_into_bytes_object_mock.return_value = image_bytes
+
         Downloader(tmp_path).save_image(filename, "")
         file = Path(tmp_path / filename)
+
         assert file.exists()
 
 
 @pytest.mark.integtests
 class TestConvertStringIntoBytesObject:
-    file_scr = ("https://imagocms.com",)
-
     @pytest.fixture
     def mocked_responses(self):
         with RequestsMock() as response:
             yield response
 
-    @pytest.mark.parametrize("file_src", file_scr)
     def test_request_get_and_content_should_be_called(
         self,
         mocker: MockerFixture,
         prepare_downloader: Downloader,
         mocked_responses: RequestsMock,
-        file_src: str,
     ):
+
         write_bytes_to_file_mocker = mocker.patch(
             "webscraper.image_downloader.Downloader._write_bytes_to_file"
         )
 
+        file_src = "https://imagocms.com"
         filename, bytes_object = "test_filename", b"ImagoCmsRulez"
         mocked_responses.get(
             file_src,
@@ -101,4 +107,5 @@ class TestConvertStringIntoBytesObject:
         )
 
         prepare_downloader.save_image(filename, file_src)
+
         write_bytes_to_file_mocker.assert_called_once_with(filename, bytes_object)

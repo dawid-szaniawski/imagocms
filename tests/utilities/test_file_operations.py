@@ -25,8 +25,10 @@ class TestIsValidImage:
     def prepare_bytesio_and_filename(
         self, request: SubRequest, bytes_generator: Callable[[str], bytes]
     ) -> tuple[IO[bytes], str]:
+
         filename = request.param
         bytes_object = bytes_generator(filename)
+
         yield BytesIO(bytes_object), filename
 
     @pytest.mark.parametrize(
@@ -35,10 +37,10 @@ class TestIsValidImage:
     def test_return_true_if_image_is_valid(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ) -> None:
+
         bytesio, filename = prepare_bytesio_and_filename
-        assert (
-            is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
-        )
+
+        assert is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
 
     @pytest.mark.parametrize(
         "prepare_bytesio_and_filename", not_a_valid_image, indirect=True
@@ -46,6 +48,7 @@ class TestIsValidImage:
     def test_return_false_if_file_is_not_a_valid_image(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ) -> None:
+
         bytesio, filename = prepare_bytesio_and_filename
 
         assert (
@@ -59,7 +62,9 @@ class TestIsValidImage:
     def test_return_false_if_extension_from_name_is_not_in_allowed_extensions(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ) -> None:
+
         bytesio, filename = prepare_bytesio_and_filename
+
         assert (
             is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
@@ -71,7 +76,9 @@ class TestIsValidImage:
     def test_return_false_if_extension_from_name_is_not_extension_from_bytes(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ) -> None:
+
         bytesio, filename = prepare_bytesio_and_filename
+
         assert (
             is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
@@ -83,7 +90,9 @@ class TestIsValidImage:
     def test_return_false_if_extension_from_bytes_is_not_in_allowed_extensions(
         self, prepare_bytesio_and_filename: tuple[IO[bytes], str]
     ) -> None:
+
         bytesio, filename = prepare_bytesio_and_filename
+
         assert (
             is_valid_image(self.__class__.allowed_extensions, bytesio, filename)
             is False
