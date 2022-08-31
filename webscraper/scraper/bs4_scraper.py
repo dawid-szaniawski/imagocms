@@ -2,12 +2,12 @@ from requests import get
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 
-from webscraper.scraper.models import ImageSource
+from webscraper.scraper.models import ImagesSource
 
 
 class Bs4Scraper:
-    def __init__(self, image_source: ImageSource):
-        self.image_source = image_source
+    def __init__(self, images_source: ImagesSource):
+        self.images_source = images_source
         self.html_dom = self.get_html_dom()
 
     def get_html_dom(self) -> BeautifulSoup:
@@ -16,18 +16,20 @@ class Bs4Scraper:
 
         Returns:
             BeautifulSoup object containing HTML DOM."""
-        request = get(self.image_source.website_url)
+        request = get(self.images_source.website_url)
         return BeautifulSoup(request.text, "html.parser")
 
     def find_image_holders(self) -> ResultSet:
-        return self.html_dom.select("div." + self.image_source.image_class)
+        return self.html_dom.select("div." + self.images_source.images_container_class)
 
     @staticmethod
-    def find_image_src_and_alt(div: Tag) -> tuple[str, str]:
+    def find_image_src_and_alt(div: Tag) -> tuple[str, str] | None:
         image = div.find("img")
         try:
             return image["src"], image["alt"]
         except TypeError:
+            pass
+        except KeyError:
             pass
 
     @staticmethod
@@ -44,14 +46,14 @@ class Bs4Scraper:
             return False if len(new_url) < 2 or new_url == current_url else True
 
         pagination_div = find_pagination_div(
-            self.html_dom, self.image_source.pagination_class
+            self.html_dom, self.images_source.pagination_class
         )
         next_url = pagination_div.find("a")["href"]
 
         next_url_index = 1
-        while not is_url_correct(next_url, self.image_source.website_url):
+        while not is_url_correct(next_url, self.images_source.website_url):
             next_url_index += 1
             next_url = pagination_div.find_all("a")[next_url_index]["href"]
 
-        self.image_source.website_url = next_url
+        self.images_source.website_url = next_url
         self.html_dom = self.get_html_dom()

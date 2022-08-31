@@ -18,6 +18,7 @@ class TestChangeName:
     def test_uuid4_module_should_be_called(self, mocker: MockerFixture) -> None:
 
         uuid4_mock = mocker.patch("uuid.uuid4")
+
         string_operations.change_name("test_filename.JPG")
 
         uuid4_mock.assert_called_once()

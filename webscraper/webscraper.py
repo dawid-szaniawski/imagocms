@@ -1,5 +1,5 @@
-from webscraper.scraper.models import ImageSource, Image
-from webscraper.scraper.scraper import Bs4Scraper
+from webscraper.scraper.models import ImagesSource, Image
+from webscraper.scraper.bs4_scraper import Bs4Scraper
 from utilities.string_operations import change_name
 
 
@@ -21,7 +21,7 @@ class WebScraper:
 
     def __init__(self, website_data: dict[str, str | int]):
         self.author_id = website_data["website_user_id"]
-        self.image_source = self.prepare_image_source(website_data)
+        self.images_source = self.prepare_images_source(website_data)
         self._synchronization_data = []
 
     def start_synchronization(self) -> None:
@@ -29,26 +29,26 @@ class WebScraper:
         self.synchronization_data = self._synchronization_process()
 
     @staticmethod
-    def prepare_image_source(website):
+    def prepare_images_source(website):
         try:
             pagination_class = website["pagination_class"]
         except KeyError:
             pagination_class = "pagination"
-        return ImageSource(
+        return ImagesSource(
             website_url=website["website_url"],
-            image_class=website["images_container_class"],
+            images_container_class=website["images_container_class"],
             pagination_class=pagination_class,
             pages_to_scan=website["pages_to_scan"],
         )
 
     def _synchronization_process(self) -> set[Image]:
-        scraper = Bs4Scraper(self.image_source)
+        scraper = Bs4Scraper(self.images_source)
         images = set()
-        while self.image_source.pages_to_scan > 0:
+        while self.images_source.pages_to_scan > 0:
             images.update(self._prepare_images_data(scraper, self.author_id))
-            if self.image_source.pages_to_scan > 1:
+            if self.images_source.pages_to_scan > 1:
                 scraper.set_next_page()
-            self.image_source.pages_to_scan -= 1
+            self.images_source.pages_to_scan -= 1
         return images
 
     @staticmethod

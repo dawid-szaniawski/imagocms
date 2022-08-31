@@ -8,16 +8,14 @@ from responses import RequestsMock
 from webscraper.image_downloader import Downloader
 
 
-@pytest.fixture()
+@pytest.fixture
 def prepare_downloader(tmp_path: Path) -> Downloader:
     yield Downloader(tmp_path)
 
 
 @pytest.mark.unittests
 class TestDownloaderInit:
-    def test_object_upload_folder_should_have_proper_value(
-        self, tmp_path: Path
-    ) -> None:
+    def test_upload_folder_should_have_proper_value(self, tmp_path: Path) -> None:
 
         downloader = Downloader(tmp_path)
 
@@ -32,10 +30,10 @@ class TestDownloaderSaveImage:
 
         mocker.patch("webscraper.image_downloader.Downloader._write_bytes_to_file")
         filename, file_src = "file_name", "file_src"
-
         convert_string_into_bytes_object_mock = mocker.patch(
             "webscraper.image_downloader.Downloader._convert_string_into_bytes_object"
         )
+
         prepare_downloader.save_image(filename, file_src)
 
         convert_string_into_bytes_object_mock.assert_called_once_with(file_src)
@@ -80,30 +78,23 @@ class TestWriteBytesToFile:
         assert file.exists()
 
 
-@pytest.mark.integtests
+@pytest.mark.unittests
 class TestConvertStringIntoBytesObject:
-    @pytest.fixture
-    def mocked_responses(self):
-        with RequestsMock() as response:
-            yield response
-
     def test_request_get_and_content_should_be_called(
         self,
         mocker: MockerFixture,
         prepare_downloader: Downloader,
         mocked_responses: RequestsMock,
     ):
-
-        write_bytes_to_file_mocker = mocker.patch(
-            "webscraper.image_downloader.Downloader._write_bytes_to_file"
-        )
-
         file_src = "https://webludus.pl"
-        filename, bytes_object = "test_filename", b"ImagoCmsRulez"
+        filename, bytes_object = "test_filename", b"WebLudus"
         mocked_responses.get(
             file_src,
             body=bytes_object,
             status=200,
+        )
+        write_bytes_to_file_mocker = mocker.patch(
+            "webscraper.image_downloader.Downloader._write_bytes_to_file"
         )
 
         prepare_downloader.save_image(filename, file_src)

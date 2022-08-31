@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from pytest import fixture
+from responses import RequestsMock
 
 
 @fixture
@@ -13,3 +14,9 @@ def bytes_generator():
             return f.read()
 
     yield prepare_bytes
+
+
+@fixture
+def mocked_responses() -> RequestsMock:
+    with RequestsMock() as response:
+        yield response

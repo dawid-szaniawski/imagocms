@@ -2,12 +2,12 @@ from dataclasses import dataclass, asdict
 
 
 @dataclass
-class ImageSource:
+class ImagesSource:
     """An object that represents the page being scraped.
     Takes two arguments when creating the object."""
 
     website_url: str
-    image_class: str
+    images_container_class: str
     pagination_class: str
     pages_to_scan: int
 
