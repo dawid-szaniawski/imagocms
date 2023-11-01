@@ -57,6 +57,14 @@ article{
   margin: auto;
   padding: 15px;
 }
+.image-source-container {
+    width: fit-content;
+    margin: auto;
+}
+.image-source-a {
+    text-decoration: none;
+    color: #777;
+}
 .username{
   color: #f60;
   text-decoration: none;
@@ -305,12 +313,12 @@ p.body {
   font-size: 1.4rem;
   margin-right: 8px;
 }
-a.comments-link {
+a.comments-link, .image-source-p {
   text-decoration: none;
   color: #777;
   transition: .5s;
 }
-a.comments-link:hover {
+a.comments-link:hover, .image-source-p:hover {
   text-decoration: underline;
 }
 @media screen and (min-width: 400px) and (min-height: 670px) {

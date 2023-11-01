@@ -1,0 +1,36 @@
+<section class="comments-wrapper">
+    <div class="comments">
+  {% if g.user %}
+    <div class="add-comment">
+        <form method="post" class="add-comment-form">
+            <div class="comment-input">
+        <textarea id="comment" name="comment" class="input comment-input"
+                  placeholder="Wpisz swój komentarz" style="padding: 0px 6px;"></textarea>
+      </div>
+            <button type="submit" class="comment-submit">
+                <img src="{{ url_for('static', filename='diskette_32.png') }}"
+                     class="submit-image" width="51" height="51" alt="Zapisz" title="Zapisz">
+            </button>
+        </form>
+    </div>
+  {% else %}
+    <div class="add-comment">
+        <span>Tylko zalogowany użytkownik może dodać komentarze.
+            <a href="{{ url_for('auth.login') }}" title="Zaloguj się"
+               class="comments-link">Zaloguj się!</a></span>
+    </div>
+  {% endif %}
+
+<div class="all-comments">
+        {% for comment in comments %}
+        <div class="comment">
+            <p><a href="{{ url_for('homepage.index', author=comment['username'], page=1) }}"
+                  title="Sprawdź inne posty {{ comment['username'] }}" class="username">
+                    {{ comment['username'] }}</a>
+                <span style="font-size: 1.4rem;">{{ comment['created'].strftime('%Y-%m-%d %H:%M') }}</span></p>
+            <p class="body">{{ comment['body'] }}</p>
+        </div>
+        {% endfor %}
+</div>
+        </div>
+</section>

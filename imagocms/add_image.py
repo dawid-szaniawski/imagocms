@@ -11,10 +11,10 @@ from flask import (
     current_app,
 )
 
-from imagocms.db import get_db
 from imagocms.auth import login_required
-from utilities.file_operations import is_valid_image
-from utilities.string_operations import change_name
+from imagocms.db import get_db
+from imagocms.sql_queries import insert_image
+from imagocms.file_operations import is_valid_image, change_file_name
 
 bp = Blueprint("create", __name__, url_prefix="/create")
 
@@ -52,16 +52,14 @@ def create():
             db = get_db()
             if file:
                 file.stream.seek(0)
-                filename = change_name(file.filename)
+                filename = change_file_name(file.filename)
                 file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
                 file.close()
             else:
                 filename = None
             db.execute(
-                """
-                INSERT INTO images (title, author_id, description, filename, accepted)
-                VALUES (?, ?, ?, ?, 0)""",
-                (title, g.user["id"], description, filename),
+                insert_image,
+                (g.user["id"], title, description, filename, None, None, False)
             )
             db.commit()
             return redirect(url_for("homepage.index"))

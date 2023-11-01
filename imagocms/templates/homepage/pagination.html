@@ -1,0 +1,15 @@
+<div class="pagination">
+    {% if next_page %}
+    <div class="pagination-button">
+        <a title="Następna strona" class="pagination-a"
+        href="
+        {% if author %}
+            {{ url_for('homepage.index', author=author, page=next_page) }}
+        {% else %}
+            {{ url_for('homepage.index', page=next_page) }}{% endif %}"
+        >Następna strona</a>
+        {% else %}
+
+    </div>
+    {% endif %}
+</div>

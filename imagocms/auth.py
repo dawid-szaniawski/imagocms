@@ -13,7 +13,11 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from imagocms.db import get_db
-from utilities.string_operations import is_data_correct
+from imagocms.sql_queries import (
+    select_id_password_by_name,
+    insert_user,
+    select_all_user_data_by_id
+)
 
 
 bp = Blueprint("auth", __name__, url_prefix="/login")
@@ -26,13 +30,10 @@ def login():
         password = request.form["password"]
         error = None
 
-        if not is_data_correct(username, password):
+        if not is_login_data_correct(username, password):
             error = "Wprowadzone dane są nieprawidłowe."
 
-        db = get_db()
-        user = db.execute(
-            "SELECT id, password FROM user WHERE username = ?", (username,)
-        ).fetchone()
+        user = get_db().execute(select_id_password_by_name, (username,)).fetchone()
 
         if user is None:
             error = "Użytkownik o takim loginie nie istnieje."
@@ -57,7 +58,7 @@ def register():
         email = request.form["email"]
         error = None
 
-        if not is_data_correct(username, password, email):
+        if not is_login_data_correct(username, password, email):
             error = "Wprowadzone dane są nieprawidłowe."
         elif email == "":
             email = None
@@ -66,8 +67,7 @@ def register():
             db = get_db()
             try:
                 db.execute(
-                    "INSERT INTO user (username, password, email) VALUES (?, ?, ?)",
-                    (username, generate_password_hash(password), email),
+                    insert_user, (username, generate_password_hash(password), email)
                 )
                 db.commit()
             except db.IntegrityError:
@@ -87,9 +87,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = (
-            get_db().execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
-        )
+        g.user = get_db().execute(select_all_user_data_by_id, (user_id,)).fetchone()
 
 
 @bp.route("/logout")
@@ -106,3 +104,37 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+def is_login_data_correct(
+    user_login: str, user_password: str, user_email: str | None = None
+) -> bool:
+    """Checks if the user has entered login, password, and email address (optional).
+    Additionally, it verifies that they are of the correct length and that they do not
+    contain forbidden characters.
+
+    Args:
+        user_login: string containing login
+        user_password: string containing password
+        user_email: string containing email
+
+    Returns:
+        True if all the data was correct, and False if something goes wrong."""
+    forbidden_chars = '"#$%^&*\\()=, „”-/<>|;ąćęłńóśźż{}[]`'
+
+    if user_login is None or user_password is None:
+        return False
+    if user_login == "" or user_password == "":
+        return False
+    if len(user_login) > 15 or len(user_password) > 24:
+        return False
+
+    for i in forbidden_chars:
+        if i in user_login or i in user_password:
+            return False
+
+    if user_email and user_email != "":
+        if user_email.count("@") != 1:
+            return False
+
+    return True

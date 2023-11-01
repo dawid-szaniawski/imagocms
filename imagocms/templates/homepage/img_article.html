@@ -1,0 +1,52 @@
+<article>
+    <div class="image">
+        <h2 class="image-title">
+            <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}"
+             title="{{ image['title'] }}">{{ image['title'] }}</a></h2>
+        <div class="image-details">
+        <p class="author-and-data">
+            <a href="{{ url_for('homepage.index', author=image['username'], page=1) }}"
+               class="username" title="Sprawdź inne posty autora {{ image['username'] }}">
+                {{ image['username'] }}</a>
+            {{ image['created'].strftime('%Y-%m-%d %H:%M') }}</p>
+        <div class="homepage-comments">
+            <img src="{{ url_for('static', filename='comments_16.png') }}" width="16" height="16"
+                 class="comments-image" alt="Liczba komentarzy">
+            {{ image['comments'] }}
+        </div>
+        </div>
+
+            {% if image['description'] %}
+            <div class="description-div">
+                <p class="description-p">{{ image['description'] }}</p>
+            </div>
+            {% endif %}
+
+        {% if image['filename'] or image['img_src'] %}
+            <a href="{{ url_for('homepage.image_page', img_id=image['id']) }}" title="{{ image['title'] }}">
+            {% if image['filename'] %}
+                <img src="{{ url_for('static', filename='images/'+image['filename']) }}"
+                     class="image-image" name="{{ image['title'] }}"
+                     alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+            {% else %}
+                <img src="{{ image['img_src'] }}" class="image-image" name="{{ image['title'] }}"
+                     referrerpolicy="no-referrer"
+                     alt="{% if image['description'] %}{{ image['description'] }}{% else %}{{ image['title'] }}{% endif %}">
+            {% endif %}
+            </a>
+        {% endif %}
+
+        {% if image['source'] %}
+        <div class="image-source-container">
+            <p class="image-source-p">
+                <a href="{{ image['source'] }}" class="image-source-a"
+                   title="Zobacz ten obrazek na {{ image['username'] }}"
+                   referrerpolicy="no-referrer" target="_blank">
+                    (źródło)
+                </a>
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</article>

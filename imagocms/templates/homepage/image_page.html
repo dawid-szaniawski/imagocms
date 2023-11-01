@@ -1,67 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}{{ image_page_data[0]['title'] }}{% endblock %}
+{% block title %}{{ image['title'] }}{% endblock %}
 
 {% block content %}
-<article>
-    <div class="image">
-        <h2 class="image-title">{{ image_page_data[0]['title'] }}</h2>
-        <div class="image-details">
-        <p class="author-and-data">
-            <a href="{{ url_for('homepage.author_index', page=1, author_name=image_page_data[0]['img_author']) }}" title="Sprawdź inne posty autora {{ image_page_data[0]['img_author'] }}" class="username">
-                {{ image_page_data[0]['img_author'] }}</a>
-            {{ image_page_data[0]['img_created'].strftime('%Y-%m-%d') }}</p>
 
-        <div class="homepage-comments">
-            <img src="{{ url_for('static', filename='comments_16.png') }}" width="16" height="16" class="comments-image" alt="Liczba komentarzy">
-            {{ image_page_data[0]['c_count'] }}
-        </div>
-        </div>
-            {% if image_page_data[0]['description'] %}
-        <div class="description-div">
-                <p class="description-p">{{ image_page_data[0]['description'] }}</p>
-        </div>
-            {% endif %}
+{% include '/homepage/img_article.html' %}
+{% include '/homepage/comments.html' %}
 
-    {% if image_page_data[0]['filename'] or image_page_data[0]['img_src'] %}
-        {% if image_page_data[0]['filename'] %}
-            <img src="{{ url_for('static', filename='images/'+image_page_data[0]['filename']) }}" class="image-image" name="{{ image_page_data[0]['title'] }}"
-                 alt="{% if image_page_data[0]['description'] %}{{ image_page_data[0]['description'] }}{% else %}{{ image_page_data[0]['title'] }}{% endif %}">
-        {% else %}
-            <img src="{{ image_page_data[0]['img_src'] }}" class="image-image" alt="{{ image_page_data[0]['title'] }}" name="{{ image_page_data[0]['title'] }}">
-        {% endif %}{% endif %}
-
-    </div>
-</article>
-<section class="comments-wrapper">
-    <div class="comments">
-  {% if g.user %}
-    <div class="add-comment">
-        <form method="post" class="add-comment-form">
-            <div class="comment-input">
-        <textarea id="comment" name="comment" class="input comment-input" placeholder="Wpisz swój komentarz" style="padding: 0px 6px;"></textarea>
-      </div>
-            <button type="submit" class="comment-submit">
-                <img src="{{ url_for('static', filename='diskette_32.png') }}" class="submit-image" width="51" height="51" alt="Zapisz" title="Zapisz">
-            </button>
-        </form>
-    </div>
-  {% else %}
-    <div class="add-comment">
-        <span>Tylko zalogowany użytkownik może dodać komentarze. <a href="{{ url_for('auth.login') }}" title="Zaloguj się" class="comments-link">Zaloguj się!</a></span>
-    </div>
-  {% endif %}
-<div class="all-comments">
-    {% if image_page_data[0]['body'] %}
-        {% for comment in image_page_data %}
-        <div class="comment">
-            <p><a href="{{ url_for('homepage.author_index', page=1, author_name=comment['c_author']) }}" title="Sprawdź inne posty {{ comment['c_author'] }}" class="username">
-                    {{ comment['c_author'] }}</a>
-                <span style="font-size: 1.4rem;">{{ comment['c_created'].strftime('%Y-%m-%d') }}</span></p>
-            <p class="body">{{ comment['body'] }}</p>
-        </div>
-        {% endfor %}
-    {% endif %}
-</div>
-        </div>
-</section>
 {% endblock %}
