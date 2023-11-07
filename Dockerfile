@@ -19,6 +19,7 @@ COPY imagocms /app/imagocms
 RUN addgroup --gid 1001 --system app && \
     adduser --no-create-home --shell /bin/false --disabled-password --uid 1001 --system --group app
 
+RUN chown -R app:app /app/imagocms/static/images
 USER app
 
 CMD exec gunicorn -w 4 -b 0.0.0.0:5050 'imagocms.app:create_app()'
