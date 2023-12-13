@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=img_user
+      - POSTGRES_PASSWORD=img_pass
+    expose:
+      - "5433"
+    ports:
+      - "5433:5432"
+    command: -p 5433
+
+  app:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - db:db
+    environment:
+      - SECRET_KEY=dev
+      - DB_NAME=db
+      - DB_USER=img_user
+      - DB_HOST=db
+      - DB_PORT=5433
+      - DB_PASSWORD=img_pass
+      - PORT=5050
+    ports:
+      - "5050:5050"
+    volumes:
+      - app-data:/app/imagocms/static/images
+    depends_on:
+      - db
+
+volumes:
+  db-data:
+  app-data:

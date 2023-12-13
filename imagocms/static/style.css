@@ -1,337 +1,397 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-size: 1.4rem;
-  font-weight: 400;
-  line-height: 1.5em;
-  text-transform: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.5em;
+    text-transform: none;
 }
+
 html {
-  font-size: 62.5%;
-  font-family: Open Sans,sans-serif;
-  color: #777;
-  direction: ltr;
-  background-color: #252525;
+    font-size: 62.5%;
+    font-family: Open Sans, sans-serif;
+    color: #777;
+    direction: ltr;
+    background-color: #252525;
 }
+
 img {
-  width: 100%;
-  height: auto;
+    width: 100%;
+    height: auto;
 }
+
 h2, h2 a {
-  color: #fff;
-  font-size: 2.3rem;
-  font-weight: 450;
-  text-decoration: none;
+    color: #fff;
+    font-size: 2.3rem;
+    font-weight: 450;
+    text-decoration: none;
 }
-header{
-  height: 100%;
-  padding: 10px;
-  background-color: #181818;
-  color: #fff;
+
+header {
+    height: 100%;
+    padding: 10px;
+    background-color: #181818;
+    color: #fff;
 }
-article{
-  margin: 15px 0px 15px 0px;
-  overflow-wrap: break-word;
+
+article {
+    margin: 15px 0 15px 0;
+    overflow-wrap: break-word;
 }
+
 .heading {
-  display: flex;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  align-items: center;
-  height: 64px;
-  max-width: 1600px;
-  margin: auto;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 64px;
+    max-width: 1600px;
+    margin: auto;
 }
+
 .nav {
-  text-align: right;
+    text-align: right;
 }
-.content-wrapper{
-  max-width: 1600px;
-  margin: auto;
+
+.content-wrapper {
+    max-width: 1600px;
+    margin: auto;
 }
+
 .content-container {
-  background-color: #1f1f1f;
-  max-width: 750px;
-  margin: auto;
-  border-radius: 15px;
-  padding: 10px 0px;
+    background-color: #1f1f1f;
+    max-width: 750px;
+    margin: auto;
+    border-radius: 15px;
+    padding: 10px 0;
 }
-h2.image-title{
-  padding: 0px 10px;
+
+h2.image-title {
+    padding: 0 10px;
 }
+
 .image-source-container {
     width: fit-content;
     margin: auto;
 }
+
 .image-source-a {
     text-decoration: none;
     color: #777;
 }
-.username{
-  color: #f60;
-  text-decoration: none;
+
+.username {
+    color: #f60;
+    text-decoration: none;
 }
+
 .pagination-a {
-  background: #f60;
-  border-radius: 2px;
-  display: block;
-  line-height: 50px;
-  color: #fff;
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
-  width: 100%;
-  max-width: 750px;
-  margin: auto;
-  margin-bottom: 20px;
+    background: #f60;
+    border-radius: 2px;
+    display: block;
+    line-height: 50px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    max-width: 750px;
+    margin: auto auto 20px;
 }
+
 .pagination-a:hover {
-  transition: .5s;
-  filter: brightness(1.2);
+    transition: .5s;
+    filter: brightness(1.2);
 }
+
 .nav-link {
-  display: grid;
-  text-decoration: none;
-  color: #fff;
-  padding: 3px;
+    display: grid;
+    text-decoration: none;
+    color: #fff;
+    padding: 3px;
 }
+
 a.nav-link:hover {
-  transition: .5s;
-  text-decoration: underline;
+    transition: .5s;
+    text-decoration: underline;
 }
+
 .add-new {
-  font-size: 1.8rem;
+    font-size: 1.8rem;
 }
+
 .image-details {
-  display: flex;
-  width: 100%;
-  padding: 0px 10px;
+    display: flex;
+    width: 100%;
+    padding: 0 10px;
 }
+
 img.logo {
-  max-height: 46px;
+    max-height: 46px;
 }
+
 img.comments-image {
-  padding: 0px 4px;
+    padding: 0 4px;
 }
+
 img.image-image {
     margin-top: 8px;
 }
+
 .homepage-comments {
-  display: flex;
-  align-items: end;
-  margin-left: auto;
+    display: flex;
+    align-items: end;
+    margin-left: auto;
 }
+
 .author-and-data {
-  max-width: 80%;
+    max-width: 80%;
 }
+
 .error-messages {
-  position: fixed;
-  z-index: 1;
-  bottom: 10px;
-  width: 45%;
-  min-width: 305px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
+    position: fixed;
+    z-index: 1;
+    bottom: 10px;
+    width: 45%;
+    min-width: 305px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
 }
+
 .flash {
-  color: #fff;
-  background: red;
-  padding: 20px;
-  border-radius: 2px;
+    color: #fff;
+    background: red;
+    padding: 20px;
+    border-radius: 2px;
 }
+
 .close-btn {
-  color: #fff;
-  font-size: 2rem;
-  padding: 5px 10px;
-  cursor: pointer;
-  z-index: 2;
-  text-align: right;
-  margin-bottom: -30px;
+    color: #fff;
+    font-size: 2rem;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 2;
+    text-align: right;
+    margin-bottom: -30px;
 }
+
 .form-body {
-  align-items: center;
-  display: flex;
-  justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
+
 form {
-  background-color: #1f1f1f;
-  border-radius: 2px;
-  box-sizing: border-box;
-  height: auto;
-  padding: 20px;
-  max-width: 420px;
+    background-color: #1f1f1f;
+    border-radius: 2px;
+    box-sizing: border-box;
+    height: auto;
+    padding: 20px;
+    max-width: 420px;
 }
+
 .title {
-  color: #fff;
-  font-family: sans-serif;
-  font-size: 3rem;
-  font-weight: 600;
-  margin-top: 30px;
+    color: #fff;
+    font-family: sans-serif;
+    font-size: 3rem;
+    font-weight: 600;
+    margin-top: 30px;
 }
+
 .input-container {
-  height: 55px;
-  position: relative;
-  width: 100%;
+    height: 55px;
+    position: relative;
+    width: 100%;
 }
+
 .ic1 {
-  margin-top: 40px;
+    margin-top: 40px;
 }
+
 .ic2 {
-  margin-top: 30px;
+    margin-top: 30px;
 }
+
 .input {
-  background-color: #252525;
-  border-radius: 2px;
-  border: 0;
-  box-sizing: border-box;
-  color: #fff;
-  font-size: 2rem;
-  height: 100%;
-  outline: 0;
-  padding: 4px 20px 0;
-  width: 100%;
+    background-color: #252525;
+    border-radius: 2px;
+    border: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 2rem;
+    height: 100%;
+    outline: 0;
+    padding: 4px 20px 0;
+    width: 100%;
 }
+
 .cut {
-  background-color: #1f1f1f;
-  border-radius: 10px;
-  height: 20px;
-  left: 20px;
-  position: absolute;
-  top: -20px;
-  transform: translateY(0);
-  transition: transform 200ms;
-  width: 76px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    height: 20px;
+    left: 20px;
+    position: absolute;
+    top: -20px;
+    transform: translateY(0);
+    transition: transform 200ms;
+    width: 76px;
 }
+
 .cut-short {
-  width: 50px;
+    width: 50px;
 }
+
 .cut-long {
-  width: 130px;
+    width: 130px;
 }
+
 .input:focus ~ .cut,
 .input:not(:placeholder-shown) ~ .cut {
-  transform: translateY(8px);
+    transform: translateY(8px);
 }
+
 .placeholder {
-  color: #fff;
-  left: 20px;
-  line-height: 14px;
-  pointer-events: none;
-  position: absolute;
-  transform-origin: 0 50%;
-  transition: transform 200ms, color 200ms;
-  top: 20px;
+    color: #fff;
+    left: 20px;
+    line-height: 14px;
+    pointer-events: none;
+    position: absolute;
+    transform-origin: 0 50%;
+    transition: transform 200ms, color 200ms;
+    top: 20px;
 }
+
 .input:focus ~ .placeholder,
 .input:not(:placeholder-shown) ~ .placeholder {
-  transform: translateY(-30px) translateX(10px) scale(0.85);
+    transform: translateY(-30px) translateX(10px) scale(0.85);
 }
+
 .input:not(:placeholder-shown) ~ .placeholder {
-  color: #808097;
+    color: #808097;
 }
+
 .input:focus ~ .placeholder {
-  color: #f60;
+    color: #f60;
 }
+
 .submit {
-  background-color: #f60;
-  border-radius: 2px;
-  border: 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  font-size: 2.4rem;
-  height: 50px;
-  margin-top: 38px;
-  text-align: center;
-  width: 100%;
-  transition: .5s;
+    background-color: #f60;
+    border-radius: 2px;
+    border: 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-size: 2.4rem;
+    height: 50px;
+    margin-top: 38px;
+    text-align: center;
+    width: 100%;
+    transition: .5s;
 }
+
 .submit:hover {
-  filter: brightness(1.2);
+    filter: brightness(1.2);
 }
+
 .upload-input {
-  display: inline-block;
-  cursor: pointer;
-  text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
 }
+
 .upload-input:hover {
-  filter: brightness(1.2);
-  transition: .5s;
+    filter: brightness(1.2);
+    transition: .5s;
 }
+
 .upload-image {
-  height: 100%;
-  width: auto;
-  padding: 6px;
-  padding-bottom: 12px;
+    height: 100%;
+    width: auto;
+    padding: 6px 6px 12px;
 }
-.comments-wrapper{
-  margin: 15px 10px;
+
+.comments-wrapper {
+    margin: 15px 10px;
 }
+
 form.add-comment-form {
-  display: flex;
-  max-width: 100%;
-  padding: 10px 0;
+    display: flex;
+    max-width: 100%;
+    padding: 10px 0;
 }
+
 button.comment-submit {
-  background-color: #f60;
-  border-radius: 2px;
-  border: 0;
-  box-sizing: border-box;
-  cursor: pointer;
-  height: 50px;
-  width: 50px;
-  transition: .5s;
+    background-color: #f60;
+    border-radius: 2px;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    transition: .5s;
 }
+
 button.comment-submit:hover {
-  filter: brightness(1.2);
+    filter: brightness(1.2);
 }
+
 img.submit-image {
-  height: 100%;
-  width: auto;
-  padding: 6px;
+    height: 100%;
+    width: auto;
+    padding: 6px;
 }
+
 .add-comment {
-  margin-bottom: 12px;
+    margin-bottom: 12px;
 }
+
 .comment {
-  margin: 10px 0;
+    margin: 10px 0;
 }
+
 p.body {
-  overflow-wrap: break-word;
-  color: #fff;
+    overflow-wrap: break-word;
+    color: #fff;
 }
+
 .description {
-  resize: none;
-  height: 112px;
-  font-size: 1.5rem;
+    resize: none;
+    height: 112px;
+    font-size: 1.5rem;
 }
+
 .comment-input {
-  width: 100%;
-  resize: none;
-  font-size: 1.4rem;
-  margin-right: 8px;
+    width: 100%;
+    resize: none;
+    font-size: 1.4rem;
+    margin-right: 8px;
 }
+
 a.comments-link, .image-source-p {
-  text-decoration: none;
-  color: #777;
-  transition: .5s;
+    text-decoration: none;
+    color: #777;
+    transition: .5s;
 }
+
 a.comments-link:hover, .image-source-p:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
+
 .dp-flex {
-  display: inline-flex;
+    display: inline-flex;
 }
+
 @media screen and (min-width: 768px) and (min-height: 950px) {
-.form-body {
-  height: 85vh;
-}
-article {
-  margin: 20px;
-}
+    .form-body {
+        height: 85vh;
+    }
+
+    article {
+        margin: 20px;
+    }
 }
