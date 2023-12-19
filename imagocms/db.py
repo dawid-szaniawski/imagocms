@@ -11,7 +11,7 @@ def get_db():
             host=current_app.config["DB_HOST"],
             port=current_app.config["DB_PORT"],
             password=current_app.config["DB_PASSWORD"],
-            row_factory=dict_row
+            row_factory=dict_row,
         )
     return g.db
 
