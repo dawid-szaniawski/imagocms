@@ -10,10 +10,10 @@ def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("SECRET_KEY", token_hex(64)),
-        DB_NAME=os.environ.get("POSTGRES_NAME"),
-        DB_USER=os.environ.get("POSTGRES_USER"),
         DB_HOST=os.environ.get("POSTGRES_HOST"),
         DB_PORT=os.environ.get("POSTGRES_PORT"),
+        DB_NAME=os.environ.get("POSTGRES_DB"),
+        DB_USER=os.environ.get("POSTGRES_USER"),
         DB_PASSWORD=os.environ.get("POSTGRES_PASSWORD"),
         UPLOAD_FOLDER=os.path.join(app.static_folder, "images"),
         MAX_CONTENT_LENGTH=3 * 1000 * 1000,
