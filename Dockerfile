@@ -1,4 +1,4 @@
-FROM python:3.12.1-alpine3.19
+FROM python:3.12.4-alpine3.20
 USER root
 
 ENV PYTHONDONTWRITEBYTECODE 1 \
@@ -7,8 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE 1 \
 COPY requirements.txt /requirements.txt
 RUN apk update && apk upgrade && \
     pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --upgrade "psycopg[binary,pool]" && \
     pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --upgrade "psycopg[binary]" && \
     rm -f /requirements.txt && \
     addgroup appgroup && adduser -D -H appuser -G appgroup
 
